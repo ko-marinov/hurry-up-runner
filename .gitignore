@@ -1,0 +1,9 @@
+# System and IDE files
+.vscode/*
+
+# Vendors
+node_modules/
+
+# Build
+dist/
+/npm-debug.log
