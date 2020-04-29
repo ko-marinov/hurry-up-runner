@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ZipPlugin = require('zip-webpack-plugin');
 
@@ -26,6 +27,9 @@ module.exports = {
         ],
     },
     plugins: [
+        new CopyPlugin([
+            { from: 'assets/**/*.csv' }
+        ]),
         new HtmlWebpackPlugin(),
         new ZipPlugin({
             filename: "hurry-up-runner.zip",
