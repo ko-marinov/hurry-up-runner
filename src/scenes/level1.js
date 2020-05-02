@@ -34,14 +34,39 @@ export class Level1 extends Phaser.Scene {
             frameRate: 16,
             repeat: -1
         });
+        this.anims.create({
+            key: 'jump',
+            frames: this.anims.generateFrameNumbers('char', { start: 65, end: 70 }),
+            frameRate: 10,
+        });
 
         this.player.play('run', true);
+        this.player.on('animationcomplete', this.animComplete, this);
 
         this.physics.add.collider(this.player, layer);
+
+        this.input.keyboard.on("keydown_SPACE", this.handleJump, this);
+        this.playerJumping = false;
     }
 
     update(time, delta) {
-        let speed = 0.2;
+        let speed = 0.1;
+        if (this.playerJumping) speed *= 1.2;
         layer.x -= speed * delta;
+
+    }
+
+    handleJump() {
+        if (this.playerJumping) { return; }
+        this.player.setVelocityY(-80);
+        this.player.play('jump', false);
+        this.playerJumping = true;
+    }
+
+    animComplete(animation, frame) {
+        if (animation.key === 'jump') {
+            this.playerJumping = false;
+            this.player.play('run', true);
+        }
     }
 }
