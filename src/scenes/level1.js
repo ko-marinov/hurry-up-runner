@@ -4,6 +4,7 @@ import mainCharSpritesheet from '../../assets/sprites/main_char.png';
 
 var layer;
 var graphics;
+var tileset;
 
 export class Level1 extends Phaser.Scene {
     constructor() {
@@ -11,18 +12,14 @@ export class Level1 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('tileset', tilesetImg);
-        this.load.tilemapCSV('map', '../assets/tilemaps/level_1.csv');
+        this.load.image('dev_tileset', tilesetImg);
+        this.load.tilemapTiledJSON('map', '../assets/tilemaps/level_1.json');
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
-        this.map = this.make.tilemap({
-            key: 'map',
-            tileWidth: 16,
-            tileHeight: 16
-        });
-        let tileset = this.map.addTilesetImage('tileset');
+        this.map = this.make.tilemap({ key: 'map' });
+        tileset = this.map.addTilesetImage('dev_tileset');
         layer = this.map.createStaticLayer(0, tileset);
         layer.y = this.game.config.height - layer.height;
         this.map.setCollisionBetween(0, 100);

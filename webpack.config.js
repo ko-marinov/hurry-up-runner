@@ -28,7 +28,7 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin([
-            { from: 'assets/**/*.csv' }
+            { from: 'assets/**/*.json' },
         ]),
         new HtmlWebpackPlugin(),
         new ZipPlugin({
