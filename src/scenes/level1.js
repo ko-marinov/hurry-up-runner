@@ -26,7 +26,7 @@ export class Level1 extends Phaser.Scene {
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
-        this.player = this.physics.add.sprite(190, 200, 'char');
+        this.player = this.physics.add.sprite(150, 336, 'char');
 
         this.anims.create({
             key: 'run',
@@ -38,5 +38,10 @@ export class Level1 extends Phaser.Scene {
         this.player.play('run', true);
 
         this.physics.add.collider(this.player, layer);
+    }
+
+    update(time, delta) {
+        let speed = 0.2;
+        layer.x -= speed * delta;
     }
 }
