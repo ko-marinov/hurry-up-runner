@@ -36,8 +36,8 @@ export class Level1 extends Phaser.Scene {
         });
         this.anims.create({
             key: 'jump',
-            frames: this.anims.generateFrameNumbers('char', { start: 65, end: 70 }),
-            frameRate: 10,
+            frames: this.anims.generateFrameNumbers('char', { start: 67, end: 70 }),
+            frameRate: 12,
         });
         this.anims.create({
             key: 'dash',
@@ -67,7 +67,7 @@ export class Level1 extends Phaser.Scene {
     handleJump() {
         let timePastFromJump = this.time.now - this.playerJumpTime;
         if (!this.playerJumping) {
-            this.player.setVelocityY(-80);
+            this.player.setVelocityY(-35);
             this.player.play('jump', false);
             this.playerJumping = true;
             this.playerJumpTime = this.time.now;
@@ -88,14 +88,14 @@ export class Level1 extends Phaser.Scene {
             if (frame.index == animation.frames.length) {
                 console.log("JumpTime: ", this.time.now - this.playerJumpTime);
                 this.playerJumping = false;
-                this.player.play('run', true);
+                this.player.play('run', true, 3);
             }
         }
         if (animation.key === 'dash') {
             console.log("DashTime: ", this.time.now - this.playerJumpTime);
             this.playerJumping = false;
             this.playerDashing = false;
-            this.player.play('run', true);
+            this.player.play('run', true, 6);
         }
     }
 }
