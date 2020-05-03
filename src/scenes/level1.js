@@ -39,6 +39,11 @@ export class Level1 extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('char', { start: 65, end: 70 }),
             frameRate: 10,
         });
+        this.anims.create({
+            key: 'dash',
+            frames: [{ key: 'char', frame: 18 }],
+            frameRate: 2.5,
+        });
 
         this.player.play('run', true);
         this.player.on('animationcomplete', this.animComplete, this);
@@ -47,25 +52,49 @@ export class Level1 extends Phaser.Scene {
 
         this.input.keyboard.on("keydown_SPACE", this.handleJump, this);
         this.playerJumping = false;
+        this.playerDashing = false;
+        this.playerJumpTime = 0;
     }
 
     update(time, delta) {
         let speed = 0.1;
         if (this.playerJumping) speed *= 1.2;
+        if (this.playerDashing) speed *= 1.6;
         layer.x -= speed * delta;
 
     }
 
     handleJump() {
-        if (this.playerJumping) { return; }
-        this.player.setVelocityY(-80);
-        this.player.play('jump', false);
-        this.playerJumping = true;
+        let timePastFromJump = this.time.now - this.playerJumpTime;
+        if (!this.playerJumping) {
+            this.player.setVelocityY(-80);
+            this.player.play('jump', false);
+            this.playerJumping = true;
+            this.playerJumpTime = this.time.now;
+        } else {
+            if (timePastFromJump < 200) {
+                this.player.setVelocityY(-35);
+                this.player.play('dash', false);
+                this.playerDashing = true;
+            } else {
+                console.log("Too late for dash:", timePastFromJump, "ms > 200 ms");
+
+            }
+        }
     }
 
     animComplete(animation, frame) {
         if (animation.key === 'jump') {
+            if (frame.index == animation.frames.length) {
+                console.log("JumpTime: ", this.time.now - this.playerJumpTime);
+                this.playerJumping = false;
+                this.player.play('run', true);
+            }
+        }
+        if (animation.key === 'dash') {
+            console.log("DashTime: ", this.time.now - this.playerJumpTime);
             this.playerJumping = false;
+            this.playerDashing = false;
             this.player.play('run', true);
         }
     }
