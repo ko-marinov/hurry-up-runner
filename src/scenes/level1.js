@@ -56,6 +56,8 @@ export class Level1 extends Phaser.Scene {
         this.playerJumping = false;
         this.playerDashing = false;
         this.playerJumpTime = 0;
+
+        this.input.keyboard.on("keyup_R", this.restart, this);
     }
 
     update(time, delta) {
@@ -100,5 +102,10 @@ export class Level1 extends Phaser.Scene {
             this.playerDashing = false;
             this.player.play('run', true, 6);
         }
+    }
+
+    restart() {
+        layer.x = 0;
+        this.player.setPosition(150, 338);
     }
 }
