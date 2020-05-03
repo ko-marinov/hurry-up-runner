@@ -26,7 +26,9 @@ export class Level1 extends Phaser.Scene {
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
-        this.player = this.physics.add.sprite(150, 336, 'char');
+        this.player = this.physics.add.sprite(150, 338, 'char');
+        this.player.body.setOffset(7, 10);
+        this.player.body.setSize(13, 20, false);
 
         this.anims.create({
             key: 'run',
@@ -57,6 +59,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     update(time, delta) {
+        if (this.player.y > 338) { return; }
         let speed = 0.1;
         if (this.playerJumping) speed *= 1.2;
         if (this.playerDashing) speed *= 1.6;
