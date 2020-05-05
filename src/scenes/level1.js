@@ -1,5 +1,5 @@
 import 'phaser';
-import tilesetImg from '../../assets/tilesets/dev_tileset.png';
+import tilesetImg from '../../assets/tilesets/city-tileset.png';
 import mainCharSpritesheet from '../../assets/sprites/main_char.png';
 
 var layer;
@@ -12,21 +12,21 @@ export class Level1 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('dev_tileset', tilesetImg);
+        this.load.image('city-tileset', tilesetImg);
         this.load.tilemapTiledJSON('map', '../assets/tilemaps/level_1.json');
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
         this.map = this.make.tilemap({ key: 'map' });
-        tileset = this.map.addTilesetImage('dev_tileset');
+        tileset = this.map.addTilesetImage('city-tileset');
         layer = this.map.createStaticLayer(0, tileset);
         layer.y = this.game.config.height - layer.height;
         this.map.setCollisionBetween(0, 100);
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
-        this.player = this.physics.add.sprite(150, 338, 'char');
+        this.player = this.physics.add.sprite(150, 322, 'char');
         this.player.body.setOffset(7, 10);
         this.player.body.setSize(13, 20, false);
 
@@ -125,7 +125,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     restart() {
-        this.player.setPosition(150, 338);
+        this.player.setPosition(150, 322);
     }
 
     isLevelComplete() {
