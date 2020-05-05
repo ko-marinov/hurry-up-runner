@@ -56,17 +56,22 @@ export class Level1 extends Phaser.Scene {
         this.playerJumping = false;
         this.playerDashing = false;
         this.playerJumpTime = 0;
+        this.playerVelocityX = 100;
 
         this.input.keyboard.on("keyup_R", this.restart, this);
+
+        this.cameras.main.startFollow(this.player, false, 1, 0, -210, 138);
     }
 
     update(time, delta) {
-        if (this.player.y > 338) { return; }
-        let speed = 0.1;
-        if (this.playerJumping) speed *= 1.2;
-        if (this.playerDashing) speed *= 1.6;
-        layer.x -= speed * delta;
+        this.updatePlayerVelocity();
+    }
 
+    updatePlayerVelocity() {
+        let playerVelocityX = this.playerVelocityX;
+        if (this.playerJumping) playerVelocityX *= 1.2;
+        if (this.playerDashing) playerVelocityX *= 1.6;
+        this.player.setVelocityX(playerVelocityX);
     }
 
     handleJump() {
@@ -105,7 +110,6 @@ export class Level1 extends Phaser.Scene {
     }
 
     restart() {
-        layer.x = 0;
         this.player.setPosition(150, 338);
     }
 }
