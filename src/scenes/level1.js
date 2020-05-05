@@ -22,7 +22,8 @@ export class Level1 extends Phaser.Scene {
         tileset = this.map.addTilesetImage('city-tileset');
         layer = this.map.createStaticLayer(0, tileset);
         layer.y = this.game.config.height - layer.height;
-        this.map.setCollisionBetween(0, 100);
+        this.map.setCollisionBetween(1, 2, true);
+        this.map.setCollisionBetween(5, 100, true);
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
