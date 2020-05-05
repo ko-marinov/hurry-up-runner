@@ -66,7 +66,8 @@ export class Level1 extends Phaser.Scene {
 
         this.input.keyboard.on("keyup_R", this.restart, this);
 
-        this.cameras.main.startFollow(this.player, false, 1, 0, -210, 138);
+        this.cameras.main.startFollow(this.player, false, 1, 0, -80, 0);
+        this.cameras.main.setZoom(2.5);
     }
 
     update(time, delta) {
