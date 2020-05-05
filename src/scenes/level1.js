@@ -46,6 +46,12 @@ export class Level1 extends Phaser.Scene {
             frames: [{ key: 'char', frame: 18 }],
             frameRate: 2.5,
         });
+        this.anims.create({
+            key: 'cheers',
+            frames: this.anims.generateFrameNumbers('char', { start: 67, end: 70 }),
+            frameRate: 9,
+            repeat: -1
+        });
 
         this.player.play('run', true);
         this.player.on('animationcomplete', this.animComplete, this);
@@ -64,7 +70,16 @@ export class Level1 extends Phaser.Scene {
     }
 
     update(time, delta) {
-        this.updatePlayerVelocity();
+        if (this.isLevelFailed()) {
+            this.restart();
+        }
+        else if (this.isLevelComplete()) {
+            this.player.setVelocityX(0);
+            this.player.play('cheers', true);
+        }
+        else {
+            this.updatePlayerVelocity();
+        }
     }
 
     updatePlayerVelocity() {
@@ -111,5 +126,13 @@ export class Level1 extends Phaser.Scene {
 
     restart() {
         this.player.setPosition(150, 338);
+    }
+
+    isLevelComplete() {
+        return this.player.x > 1500;
+    }
+
+    isLevelFailed() {
+        return this.player.y > 340;
     }
 }
