@@ -23,7 +23,7 @@ export class Level1 extends Phaser.Scene {
         layer = this.map.createStaticLayer(0, tileset);
         layer.y = this.game.config.height - layer.height;
         this.map.setCollisionBetween(1, 2, true);
-        this.map.setCollisionBetween(5, 100, true);
+        this.map.setCollisionBetween(5, 18, true);
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
@@ -69,6 +69,7 @@ export class Level1 extends Phaser.Scene {
         this.playerDashing = false;
         this.playerJumpTime = 0;
         this.playerVelocityX = 100;
+        this.levelComplete = false;
 
         this.input.keyboard.on("keyup_R", this.restart, this);
 
@@ -76,6 +77,7 @@ export class Level1 extends Phaser.Scene {
         this.cameras.main.setZoom(2.5);
 
         this.initBananas();
+        this.initFinish();
     }
 
     update(time, delta) {
@@ -135,10 +137,11 @@ export class Level1 extends Phaser.Scene {
 
     restart() {
         this.player.setPosition(150, 322);
+        this.levelComplete = false;
     }
 
     isLevelComplete() {
-        return this.player.x > 1500;
+        return this.levelComplete;
     }
 
     isLevelFailed() {
@@ -178,5 +181,28 @@ export class Level1 extends Phaser.Scene {
     raisePlayer() {
         this.playerVelocityX = 100;
         this.player.play('run', true);
+    }
+
+    initFinish() {
+        var finishTile;
+        layer.forEachTile(function (tile) {
+            if (tile.properties.isFinish) {
+                finishTile = tile;
+            }
+        }, this);
+
+        this.finish = this.physics.add.staticImage(layer.x + finishTile.pixelX, layer.y + finishTile.pixelY);
+        this.physics.add.overlap(this.player, this.finish, this.onEnterFinishTile, null, this);
+    }
+
+    onEnterFinishTile(player, finishTile) {
+        this.tweens.add({
+            targets: this,
+            duration: 700,
+            playerVelocityX: 0,
+            onComplete: function (tween, targets) {
+                targets[0].levelComplete = true;
+            }
+        });
     }
 }
