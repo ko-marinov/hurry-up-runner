@@ -67,7 +67,7 @@ export class Level1 extends Phaser.Scene {
 
         this.input.keyboard.on("keyup_R", this.restart, this);
 
-        this.cameras.main.startFollow(this.player, false, 1, 0, -80, 0);
+        this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 0);
         this.cameras.main.setZoom(2.5);
     }
 
@@ -94,13 +94,13 @@ export class Level1 extends Phaser.Scene {
     handleJump() {
         let timePastFromJump = this.time.now - this.playerJumpTime;
         if (!this.playerJumping) {
-            this.player.setVelocityY(-35);
+            this.player.setVelocityY(-150);
             this.player.play('jump', false);
             this.playerJumping = true;
             this.playerJumpTime = this.time.now;
         } else {
             if (timePastFromJump < 200) {
-                this.player.setVelocityY(-35);
+                this.player.setVelocityY(-130);
                 this.player.play('dash', false);
                 this.playerDashing = true;
             } else {
