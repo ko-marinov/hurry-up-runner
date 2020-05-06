@@ -76,8 +76,14 @@ export class Level1 extends Phaser.Scene {
         this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 0);
         this.cameras.main.setZoom(2.5);
 
+        let uicamera = this.cameras.add(0, 0, 720, 400, false, "uicamera");
+        uicamera.scrollY = 1000;
+
         this.initBananas();
         this.initFinish();
+
+        this.timeFromStart = 0;
+        this.textTime = this.add.text(590, 1010, "TIME: 0 s");
     }
 
     update(time, delta) {
@@ -90,6 +96,7 @@ export class Level1 extends Phaser.Scene {
         }
         else {
             this.updatePlayerVelocity();
+            this.updateTimeFromStart(delta);
         }
     }
 
@@ -98,6 +105,12 @@ export class Level1 extends Phaser.Scene {
         if (this.playerJumping) playerVelocityX *= 1.2;
         if (this.playerDashing) playerVelocityX *= 1.6;
         this.player.setVelocityX(playerVelocityX);
+    }
+
+    updateTimeFromStart(delta) {
+        this.timeFromStart += delta;
+        let timeString = (Math.round(this.timeFromStart) / 1000).toFixed(2);
+        this.textTime.setText("TIME: " + timeString + " s");
     }
 
     handleJump() {
@@ -138,6 +151,7 @@ export class Level1 extends Phaser.Scene {
     restart() {
         this.player.setPosition(150, 322);
         this.levelComplete = false;
+        this.timeFromStart = 0;
     }
 
     isLevelComplete() {
