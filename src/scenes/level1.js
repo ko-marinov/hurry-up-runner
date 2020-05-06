@@ -53,6 +53,11 @@ export class Level1 extends Phaser.Scene {
             frameRate: 9,
             repeat: -1
         });
+        this.anims.create({
+            key: 'stumble',
+            frames: this.anims.generateFrameNumbers('char', { start: 91, end: 96 }),
+            frameRate: 16,
+        })
 
         this.player.play('run', true);
         this.player.on('animationcomplete', this.animComplete, this);
@@ -158,5 +163,20 @@ export class Level1 extends Phaser.Scene {
 
     onStepOnBanana(player, banana) {
         console.log("Player stepped on banana at (%d, %d)", banana.x, banana.y);
+        player.play('stumble', true);
+        this.tweens.add({
+            targets: this,
+            duration: 500,
+            playerVelocityX: 0,
+            onComplete: function (tween, targets) {
+                let target = targets[0];
+                target.time.delayedCall(700, target.raisePlayer, null, target);
+            }
+        });
+    }
+
+    raisePlayer() {
+        this.playerVelocityX = 100;
+        this.player.play('run', true);
     }
 }
