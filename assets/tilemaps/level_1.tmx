@@ -5,6 +5,14 @@
  </editorsettings>
  <tileset firstgid="1" name="city-tileset" tilewidth="16" tileheight="16" tilecount="25" columns="5">
   <image source="../tilesets/city-tileset.png" trans="ff00ff" width="80" height="80"/>
+  <tile id="2">
+   <properties>
+    <property name="isBanana" type="bool" value="true"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="5.91" y="13.9136" width="7.72727" height="1.63636"/>
+   </objectgroup>
+  </tile>
  </tileset>
  <layer id="6" name="Tile Layer 1" width="64" height="17">
   <data encoding="csv">

@@ -69,6 +69,8 @@ export class Level1 extends Phaser.Scene {
 
         this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 0);
         this.cameras.main.setZoom(2.5);
+
+        this.initBananas();
     }
 
     update(time, delta) {
@@ -136,5 +138,25 @@ export class Level1 extends Phaser.Scene {
 
     isLevelFailed() {
         return this.player.y > 340;
+    }
+
+    initBananas() {
+        this.bananas = this.physics.add.staticGroup();
+        layer.forEachTile(function (tile) {
+            if (tile.properties.isBanana) {
+                let collisionRect = tile.getCollisionGroup().objects[0];
+                let banana = this.bananas.create(
+                    layer.x + tile.pixelX + collisionRect.x,
+                    layer.y + tile.pixelY + collisionRect.y,
+                    null, null, false, true);
+                banana.body.setSize(collisionRect.width, collisionRect.height);
+            }
+        }, this);
+
+        this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
+    }
+
+    onStepOnBanana(player, banana) {
+        console.log("Player stepped on banana at (%d, %d)", banana.x, banana.y);
     }
 }

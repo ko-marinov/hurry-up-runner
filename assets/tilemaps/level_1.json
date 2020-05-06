@@ -84,6 +84,39 @@
          "spacing":0,
          "tilecount":25,
          "tileheight":16,
+         "tiles":[
+                {
+                 "id":2,
+                 "objectgroup":
+                    {
+                     "draworder":"index",
+                     "id":2,
+                     "name":"",
+                     "objects":[
+                            {
+                             "height":1.63636363636364,
+                             "id":1,
+                             "name":"",
+                             "rotation":0,
+                             "type":"",
+                             "visible":true,
+                             "width":7.72727272727273,
+                             "x":5.91,
+                             "y":13.9136363636364
+                            }],
+                     "opacity":1,
+                     "type":"objectgroup",
+                     "visible":true,
+                     "x":0,
+                     "y":0
+                    },
+                 "properties":[
+                        {
+                         "name":"isBanana",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }],
          "tilewidth":16,
          "transparentcolor":"#ff00ff"
         }],
