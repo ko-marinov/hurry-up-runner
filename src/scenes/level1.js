@@ -1,5 +1,6 @@
 import 'phaser';
 import tilesetImg from '../../assets/tilesets/city-tileset.png';
+import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
 import mainCharSpritesheet from '../../assets/sprites/main_char.png';
 
 var layer;
@@ -13,14 +14,22 @@ export class Level1 extends Phaser.Scene {
 
     preload() {
         this.load.image('city-tileset', tilesetImg);
+        this.load.image('city-bg-tileset', bgTilesetImg);
         this.load.tilemapTiledJSON('map', '../assets/tilemaps/level_1.json');
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
         this.map = this.make.tilemap({ key: 'map' });
+
+        let bg_tileset = this.map.addTilesetImage('bg', 'city-bg-tileset');
+        let bg_layer_1 = this.map.createStaticLayer(0, bg_tileset);
+        let bg_layer_2 = this.map.createStaticLayer(1, bg_tileset);
+        bg_layer_1.y = this.game.config.height - bg_layer_1.height;
+        bg_layer_2.y = this.game.config.height - bg_layer_2.height;
+
         tileset = this.map.addTilesetImage('city-tileset');
-        layer = this.map.createStaticLayer(0, tileset);
+        layer = this.map.createStaticLayer(2, tileset);
         layer.y = this.game.config.height - layer.height;
         this.map.setCollisionBetween(1, 2, true);
         this.map.setCollisionBetween(5, 18, true);
