@@ -23,20 +23,17 @@ export class Level1 extends Phaser.Scene {
         this.map = this.make.tilemap({ key: 'map' });
 
         let bg_tileset = this.map.addTilesetImage('bg', 'city-bg-tileset');
-        let bg_layer_1 = this.map.createStaticLayer(0, bg_tileset);
-        let bg_layer_2 = this.map.createStaticLayer(1, bg_tileset);
-        bg_layer_1.y = this.game.config.height - bg_layer_1.height;
-        bg_layer_2.y = this.game.config.height - bg_layer_2.height;
+        this.map.createStaticLayer(0, bg_tileset);
+        this.map.createStaticLayer(1, bg_tileset);
 
         tileset = this.map.addTilesetImage('city-tileset');
         layer = this.map.createStaticLayer(2, tileset);
-        layer.y = this.game.config.height - layer.height;
         this.map.setCollisionBetween(1, 2, true);
         this.map.setCollisionBetween(5, 18, true);
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
-        this.player = this.physics.add.sprite(150, 322, 'char');
+        this.player = this.physics.add.sprite(150, 434, 'char');
         this.player.body.setOffset(7, 10);
         this.player.body.setSize(13, 20, false);
 
@@ -82,8 +79,8 @@ export class Level1 extends Phaser.Scene {
 
         this.input.keyboard.on("keyup_R", this.restart, this);
 
-        this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 0);
-        this.cameras.main.setZoom(2.5);
+        this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 50);
+        this.cameras.main.setZoom(2);
 
         let uicamera = this.cameras.add(0, 0, 720, 400, false, "uicamera");
         uicamera.scrollY = 1000;
@@ -168,7 +165,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     isLevelFailed() {
-        return this.player.y > 340;
+        return this.player.y > 434;
     }
 
     initBananas() {
