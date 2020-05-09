@@ -81,6 +81,7 @@ export class Level1 extends Phaser.Scene {
 
         this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 50);
         this.cameras.main.setZoom(2);
+        this.cameras.main.setBounds(layer.x, layer.y, layer.width, layer.height);
 
         let uicamera = this.cameras.add(0, 0, 720, 400, false, "uicamera");
         uicamera.scrollY = 1000;
