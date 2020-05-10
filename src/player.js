@@ -22,9 +22,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         scene.input.keyboard.on("keydown_SPACE", this.handleInput, this);
     }
 
-    run() {
+    run(frame) {
+        this.isJumping = false;
+        this.isDashing = false;
+        this.jumpTime = 0;
         this.velocityX = 100;
-        this.play('run', true);
+        this.play('run', true, frame);
     }
 
     updateVelocity() {
@@ -41,15 +44,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.play('jump', false);
             this.isJumping = true;
             this.jumpTime = this.scene.time.now;
-        } else {
-            if (timePastFromJump < 200) {
-                this.setVelocityY(-130);
-                this.play('dash', false);
-                this.isDashing = true;
-            } else {
-                console.log("Too late for dash:", timePastFromJump, "ms > 200 ms");
-
-            }
+        } else if (!this.isDashing && timePastFromJump < 200) {
+            this.setVelocityY(-130);
+            this.play('dash', false);
+            this.isDashing = true;
         }
     }
 
@@ -57,15 +55,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (animation.key === 'jump') {
             if (frame.index == animation.frames.length) {
                 console.log("JumpTime: ", this.scene.time.now - this.jumpTime);
-                this.isJumping = false;
-                this.play('run', true, 3);
+                this.run(3);
             }
         }
         if (animation.key === 'dash') {
             console.log("DashTime: ", this.scene.time.now - this.jumpTime);
-            this.isJumping = false;
-            this.isDashing = false;
-            this.play('run', true, 6);
+            this.run(6);
         }
     }
 
