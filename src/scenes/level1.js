@@ -138,6 +138,7 @@ export class Level1 extends Phaser.Scene {
     onStepOnBanana(player, banana) {
         console.log("Player stepped on banana at (%d, %d)", banana.x, banana.y);
         player.onStepOnBanana();
+        this.bananas.remove(banana);
     }
 
     initFinish() {
@@ -148,11 +149,12 @@ export class Level1 extends Phaser.Scene {
             }
         }, this);
 
-        this.finish = this.physics.add.staticImage(layer.x + finishTile.pixelX, layer.y + finishTile.pixelY);
-        this.physics.add.overlap(this.player, this.finish, this.onEnterFinishTile, null, this);
+        let finishImage = this.physics.add.staticImage(layer.x + finishTile.pixelX, layer.y + finishTile.pixelY);
+        this.finishOverlapCollider = this.physics.add.overlap(this.player, finishImage, this.onEnterFinish, null, this);
     }
 
-    onEnterFinishTile(player, finishTile) {
+    onEnterFinish(player, finish) {
         player.onEnterFinishTile();
+        this.physics.world.removeCollider(this.finishOverlapCollider);
     }
 }
