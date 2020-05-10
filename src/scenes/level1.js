@@ -1,4 +1,6 @@
 import 'phaser';
+import { Player } from '../player';
+
 import tilesetImg from '../../assets/tilesets/city-tileset.png';
 import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
 import mainCharSpritesheet from '../../assets/sprites/main_char.png';
@@ -33,9 +35,7 @@ export class Level1 extends Phaser.Scene {
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
-        this.player = this.physics.add.sprite(150, 434, 'char');
-        this.player.body.setOffset(7, 10);
-        this.player.body.setSize(13, 20, false);
+        this.player = new Player(this, 150, 434);
 
         this.anims.create({
             key: 'run',
@@ -65,16 +65,8 @@ export class Level1 extends Phaser.Scene {
             frameRate: 16,
         })
 
-        this.player.play('run', true);
-        this.player.on('animationcomplete', this.animComplete, this);
-
         this.physics.add.collider(this.player, layer);
 
-        this.input.keyboard.on("keydown_SPACE", this.handleJump, this);
-        this.playerJumping = false;
-        this.playerDashing = false;
-        this.playerJumpTime = 0;
-        this.playerVelocityX = 100;
         this.levelComplete = false;
 
         this.input.keyboard.on("keyup_R", this.restart, this);
@@ -91,6 +83,7 @@ export class Level1 extends Phaser.Scene {
 
         this.timeFromStart = 0;
         this.textTime = this.add.text(590, 1010, "TIME: 0 s");
+        this.player.run();
     }
 
     update(time, delta) {
@@ -98,20 +91,11 @@ export class Level1 extends Phaser.Scene {
             this.restart();
         }
         else if (this.isLevelComplete()) {
-            this.player.setVelocityX(0);
-            this.player.play('cheers', true);
         }
         else {
-            this.updatePlayerVelocity();
+            this.player.updateVelocity();
             this.updateTimeFromStart(delta);
         }
-    }
-
-    updatePlayerVelocity() {
-        let playerVelocityX = this.playerVelocityX;
-        if (this.playerJumping) playerVelocityX *= 1.2;
-        if (this.playerDashing) playerVelocityX *= 1.6;
-        this.player.setVelocityX(playerVelocityX);
     }
 
     updateTimeFromStart(delta) {
@@ -120,43 +104,9 @@ export class Level1 extends Phaser.Scene {
         this.textTime.setText("TIME: " + timeString + " s");
     }
 
-    handleJump() {
-        let timePastFromJump = this.time.now - this.playerJumpTime;
-        if (!this.playerJumping) {
-            this.player.setVelocityY(-150);
-            this.player.play('jump', false);
-            this.playerJumping = true;
-            this.playerJumpTime = this.time.now;
-        } else {
-            if (timePastFromJump < 200) {
-                this.player.setVelocityY(-130);
-                this.player.play('dash', false);
-                this.playerDashing = true;
-            } else {
-                console.log("Too late for dash:", timePastFromJump, "ms > 200 ms");
-
-            }
-        }
-    }
-
-    animComplete(animation, frame) {
-        if (animation.key === 'jump') {
-            if (frame.index == animation.frames.length) {
-                console.log("JumpTime: ", this.time.now - this.playerJumpTime);
-                this.playerJumping = false;
-                this.player.play('run', true, 3);
-            }
-        }
-        if (animation.key === 'dash') {
-            console.log("DashTime: ", this.time.now - this.playerJumpTime);
-            this.playerJumping = false;
-            this.playerDashing = false;
-            this.player.play('run', true, 6);
-        }
-    }
-
     restart() {
         this.player.setPosition(150, 322);
+        this.player.run();
         this.levelComplete = false;
         this.timeFromStart = 0;
     }
@@ -187,21 +137,7 @@ export class Level1 extends Phaser.Scene {
 
     onStepOnBanana(player, banana) {
         console.log("Player stepped on banana at (%d, %d)", banana.x, banana.y);
-        player.play('stumble', true);
-        this.tweens.add({
-            targets: this,
-            duration: 500,
-            playerVelocityX: 0,
-            onComplete: function (tween, targets) {
-                let target = targets[0];
-                target.time.delayedCall(700, target.raisePlayer, null, target);
-            }
-        });
-    }
-
-    raisePlayer() {
-        this.playerVelocityX = 100;
-        this.player.play('run', true);
+        player.onStepOnBanana();
     }
 
     initFinish() {
@@ -217,13 +153,6 @@ export class Level1 extends Phaser.Scene {
     }
 
     onEnterFinishTile(player, finishTile) {
-        this.tweens.add({
-            targets: this,
-            duration: 700,
-            playerVelocityX: 0,
-            onComplete: function (tween, targets) {
-                targets[0].levelComplete = true;
-            }
-        });
+        player.onEnterFinishTile();
     }
 }
