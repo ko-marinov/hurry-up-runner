@@ -1,5 +1,5 @@
 import 'phaser';
-import { Player } from '../player';
+import { Player } from '../player.ts';
 
 import tilesetImg from '../../assets/tilesets/city-tileset.png';
 import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';

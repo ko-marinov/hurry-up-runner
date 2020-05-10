@@ -1,7 +1,12 @@
 import 'phaser';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y) {
+    isDashing: boolean;
+    isJumping: boolean;
+    velocityX: number;
+    jumpTime: number;
+
+    constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'char');
 
         scene.sys.displayList.add(this);
@@ -22,7 +27,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         scene.input.keyboard.on("keydown_SPACE", this.handleInput, this);
     }
 
-    run(frame) {
+    run(frame: number = 0) {
         this.isJumping = false;
         this.isDashing = false;
         this.jumpTime = 0;
@@ -51,7 +56,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    animComplete(animation, frame) {
+    animComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         if (animation.key === 'jump') {
             if (frame.index == animation.frames.length) {
                 console.log("JumpTime: ", this.scene.time.now - this.jumpTime);
