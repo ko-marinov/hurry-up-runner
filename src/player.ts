@@ -1,8 +1,14 @@
 import 'phaser';
 
+enum PlayerState {
+    RUN = 'RUN',
+    JUMP = 'JUMP',
+    DASH = 'DASH',
+    STUMBLED = 'STUNBLED',
+    CHEER = 'CHEER'
+}
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
-    isDashing: boolean;
-    isJumping: boolean;
     velocityX: number;
     jumpTime: number;
 
@@ -19,8 +25,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.on('animationcomplete', this.animComplete, this);
 
-        this.isJumping = false;
-        this.isDashing = false;
         this.jumpTime = 0;
         this.velocityX = 100;
 
@@ -28,31 +32,64 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     run(frame: number = 0) {
-        this.isJumping = false;
-        this.isDashing = false;
         this.jumpTime = 0;
         this.velocityX = 100;
         this.play('run', true, frame);
+        this.updateState(PlayerState.RUN);
+    }
+
+    jump() {
+        this.setVelocityY(-150);
+        this.play('jump', false);
+        this.jumpTime = this.scene.time.now;
+        this.updateState(PlayerState.JUMP);
+    }
+
+    dash() {
+        this.setVelocityY(-130);
+        this.play('dash', false);
+        this.updateState(PlayerState.DASH);
+    }
+
+    stumble() {
+        this.play('stumble', true);
+        this.updateState(PlayerState.STUMBLED);
+        this.scene.tweens.add({
+            targets: this,
+            duration: 500,
+            velocityX: 0,
+            onComplete: function (tween, targets) {
+                let player = targets[0];
+                player.scene.time.delayedCall(700, player.run, null, player);
+            }
+        });
+    }
+
+    cheer() {
+        this.setVelocityX(0);
+        this.play('cheers', true);
+        this.updateState(PlayerState.CHEER);
+    }
+
+    updateState(state: PlayerState) {
+        if (this.state === state) { return; }
+        console.log("Enter state:", state);
+        this.state = state;
     }
 
     updateVelocity() {
         let velocityX = this.velocityX;
-        if (this.isJumping) velocityX *= 1.2;
-        if (this.isDashing) velocityX *= 1.6;
+        if (this.state === PlayerState.JUMP) velocityX *= 1.2;
+        if (this.state === PlayerState.DASH) velocityX *= 1.6;
         this.setVelocityX(velocityX);
     }
 
     handleInput() {
         let timePastFromJump = this.scene.time.now - this.jumpTime;
-        if (!this.isJumping) {
-            this.setVelocityY(-150);
-            this.play('jump', false);
-            this.isJumping = true;
-            this.jumpTime = this.scene.time.now;
-        } else if (!this.isDashing && timePastFromJump < 200) {
-            this.setVelocityY(-130);
-            this.play('dash', false);
-            this.isDashing = true;
+        if (this.state === PlayerState.RUN) {
+            this.jump();
+        } else if (this.state === PlayerState.JUMP && timePastFromJump < 200) {
+            this.dash();
         }
     }
 
@@ -70,20 +107,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     onStepOnBanana() {
-        this.play('stumble', true);
-        this.scene.tweens.add({
-            targets: this,
-            duration: 500,
-            velocityX: 0,
-            onComplete: function (tween, targets) {
-                let player = targets[0];
-                player.scene.time.delayedCall(700, player.raise, null, player);
-            }
-        });
-    }
-
-    raise() {
-        this.run();
+        if (this.state === PlayerState.STUMBLED) { return; }
+        this.stumble();
     }
 
     onEnterFinishTile() {
@@ -93,9 +118,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             velocityX: 0,
             onComplete: function (tween, targets) {
                 let player = targets[0];
+                player.cheer();
                 player.scene.levelComplete = true;
-                player.setVelocityX(0);
-                player.play('cheers', true);
             }
         });
     }
