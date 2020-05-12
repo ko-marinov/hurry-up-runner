@@ -67,8 +67,6 @@ export class Level1 extends Phaser.Scene {
 
         this.physics.add.collider(this.player, layer);
 
-        this.levelComplete = false;
-
         this.input.keyboard.on("keyup_R", this.restart, this);
 
         this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 50);
@@ -78,11 +76,20 @@ export class Level1 extends Phaser.Scene {
         let uicamera = this.cameras.add(0, 0, 720, 400, false, "uicamera");
         uicamera.scrollY = 1000;
 
+        this.textTime = this.add.text(590, 1010, "TIME: 0 s");
+
+        this.bananas = this.physics.add.staticGroup();
+        this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
+
+        this.start();
+    }
+
+    start() {
         this.initBananas();
         this.initFinish();
 
+        this.levelComplete = false;
         this.timeFromStart = 0;
-        this.textTime = this.add.text(590, 1010, "TIME: 0 s");
         this.player.run();
     }
 
@@ -105,10 +112,11 @@ export class Level1 extends Phaser.Scene {
     }
 
     restart() {
+        this.bananas.clear(true, true);
+        this.physics.world.removeCollider(this.finishOverlapCollider);
+
         this.player.setPosition(150, 322);
-        this.player.run();
-        this.levelComplete = false;
-        this.timeFromStart = 0;
+        this.start();
     }
 
     isLevelComplete() {
@@ -120,7 +128,6 @@ export class Level1 extends Phaser.Scene {
     }
 
     initBananas() {
-        this.bananas = this.physics.add.staticGroup();
         layer.forEachTile(function (tile) {
             if (tile.properties.isBanana) {
                 let collisionRect = tile.getCollisionGroup().objects[0];
@@ -131,8 +138,6 @@ export class Level1 extends Phaser.Scene {
                 banana.body.setSize(collisionRect.width, collisionRect.height);
             }
         }, this);
-
-        this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
     }
 
     onStepOnBanana(player, banana) {
