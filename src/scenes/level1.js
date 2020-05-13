@@ -80,8 +80,6 @@ export class Level1 extends Phaser.Scene {
 
         this.bananas = this.physics.add.staticGroup();
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
-
-        this.start();
     }
 
     start() {
