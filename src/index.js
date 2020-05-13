@@ -5,6 +5,9 @@ var config = {
     type: Phaser.AUTO,
     width: 720,
     height: 400,
+    render: {
+        pixelArt: true
+    },
     physics: {
         default: "arcade",
         arcade: {
