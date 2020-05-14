@@ -93,7 +93,8 @@ export class Level1 extends Phaser.Scene {
 
     update(time, delta) {
         if (this.isLevelFailed()) {
-            this.restart();
+            this.scene.setActive(false, 'Level1');
+            this.scene.get('MainMenu').showFailScreen();
         }
         else if (this.isLevelComplete()) {
         }
@@ -110,6 +111,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     restart() {
+        this.scene.setActive(true, 'Level1');
         this.bananas.clear(true, true);
         this.physics.world.removeCollider(this.finishOverlapCollider);
 
