@@ -1,4 +1,5 @@
 import 'phaser';
+import { MainMenu } from './scenes/menu';
 import { Level1 } from './scenes/level1';
 
 var config = {
@@ -16,6 +17,7 @@ var config = {
         }
     },
     scene: [
+        MainMenu,
         Level1
     ],
     scale: {

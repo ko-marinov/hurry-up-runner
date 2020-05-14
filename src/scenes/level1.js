@@ -79,11 +79,10 @@ export class Level1 extends Phaser.Scene {
 
         this.bananas = this.physics.add.staticGroup();
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
-
-        this.start();
     }
 
     start() {
+        this.input.keyboard.on("keyup_ESC", this.pause, this);
         this.initBananas();
         this.initFinish();
 
@@ -94,7 +93,8 @@ export class Level1 extends Phaser.Scene {
 
     update(time, delta) {
         if (this.isLevelFailed()) {
-            this.restart();
+            this.scene.setActive(false, 'Level1');
+            this.scene.get('MainMenu').showFailScreen();
         }
         else if (this.isLevelComplete()) {
         }
@@ -111,6 +111,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     restart() {
+        this.scene.setActive(true, 'Level1');
         this.bananas.clear(true, true);
         this.physics.world.removeCollider(this.finishOverlapCollider);
 
@@ -160,5 +161,15 @@ export class Level1 extends Phaser.Scene {
     onEnterFinish(player, finish) {
         player.onEnterFinishTile();
         this.physics.world.removeCollider(this.finishOverlapCollider);
+    }
+
+    pause(event) {
+        event.stopPropagation();
+        this.scene.setActive(false, 'Level1');
+        this.scene.get('MainMenu').showPauseScreen();
+    }
+
+    resume() {
+        this.scene.setActive(true, 'Level1');
     }
 }

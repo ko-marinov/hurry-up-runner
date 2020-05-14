@@ -1,6 +1,7 @@
 import 'phaser';
 
 enum PlayerState {
+    IDLE = 'IDLE',
     RUN = 'RUN',
     JUMP = 'JUMP',
     DASH = 'DASH',
@@ -25,10 +26,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.on('animationcomplete', this.animComplete, this);
 
-        this.jumpTime = 0;
-        this.velocityX = 100;
-
         scene.input.keyboard.on("keydown_SPACE", this.handleInput, this);
+
+        this.idle();
+    }
+
+    idle() {
+        this.jumpTime = 0;
+        this.velocityX = 0;
+        this.play('idle', true);
+        this.setState(PlayerState.IDLE);
     }
 
     run(frame: number = 0) {
