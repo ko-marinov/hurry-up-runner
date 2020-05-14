@@ -30,8 +30,7 @@ export class Level1 extends Phaser.Scene {
 
         tileset = this.map.addTilesetImage('city-tileset');
         layer = this.map.createStaticLayer(2, tileset);
-        this.map.setCollisionBetween(1, 2, true);
-        this.map.setCollisionBetween(5, 18, true);
+        this.map.setCollision([1, 2, 6, 7, 8, 10], true, true, layer);
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
@@ -122,7 +121,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     isLevelFailed() {
-        return this.player.y > 434;
+        return this.player.y > 500;
     }
 
     initBananas() {

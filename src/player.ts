@@ -21,8 +21,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         this.scene = scene;
-        this.body.setOffset(7, 10);
-        this.body.setSize(13, 20, false);
+        this.body.setOffset(10, 10);
+        this.body.setSize(10, 20, false);
 
         this.on('animationcomplete', this.animComplete, this);
 
@@ -45,14 +45,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.updateState(PlayerState.RUN);
     }
 
-    jump() {
+    tryJump() {
+        if (!this.body.blocked.down) { return; }
         this.setVelocityY(-150);
         this.play('jump', false);
         this.jumpTime = this.scene.time.now;
         this.updateState(PlayerState.JUMP);
     }
 
-    dash() {
+    tryDash() {
+        let timePastFromJump = this.scene.time.now - this.jumpTime;
+        if (timePastFromJump > 200) { return; }
         this.setVelocityY(-130);
         this.play('dash', false);
         this.updateState(PlayerState.DASH);
@@ -92,11 +95,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleInput() {
-        let timePastFromJump = this.scene.time.now - this.jumpTime;
         if (this.state === PlayerState.RUN) {
-            this.jump();
-        } else if (this.state === PlayerState.JUMP && timePastFromJump < 200) {
-            this.dash();
+            this.tryJump();
+        } else if (this.state === PlayerState.JUMP) {
+            this.tryDash();
         }
     }
 
