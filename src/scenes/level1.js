@@ -82,6 +82,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     start() {
+        this.input.keyboard.on("keyup_ESC", this.pause, this);
         this.initBananas();
         this.initFinish();
 
@@ -158,5 +159,15 @@ export class Level1 extends Phaser.Scene {
     onEnterFinish(player, finish) {
         player.onEnterFinishTile();
         this.physics.world.removeCollider(this.finishOverlapCollider);
+    }
+
+    pause(event) {
+        event.stopPropagation();
+        this.scene.setActive(false, 'Level1');
+        this.scene.get('MainMenu').showPauseScreen();
+    }
+
+    resume() {
+        this.scene.setActive(true, 'Level1');
     }
 }
