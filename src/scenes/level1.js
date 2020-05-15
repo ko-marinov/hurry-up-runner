@@ -38,8 +38,8 @@ export class Level1 extends Phaser.Scene {
 
         this.anims.create({
             key: 'run',
-            frames: this.anims.generateFrameNumbers("char", { start: 13, end: 20 }),
-            frameRate: 16,
+            frames: this.anims.generateFrameNumbers("char", { start: 224, end: 238 }),
+            frameRate: 28,
             repeat: -1
         });
         this.anims.create({
