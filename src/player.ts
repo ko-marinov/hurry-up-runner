@@ -6,6 +6,7 @@ enum PlayerState {
     JUMP = 'JUMP',
     DASH = 'DASH',
     STUMBLED = 'STUNBLED',
+    EVADE = 'EVADE',
     CHEER = 'CHEER'
 }
 
@@ -46,6 +47,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryJump() {
+        if (this.state != PlayerState.RUN) { return; }
         if (!this.body.blocked.down) { return; }
         this.setVelocityY(-150);
         this.play('jump', false);
@@ -54,11 +56,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryDash() {
+        if (this.state != PlayerState.JUMP) { return; }
         let timePastFromJump = this.scene.time.now - this.jumpTime;
         if (timePastFromJump > 200) { return; }
         this.setVelocityY(-130);
         this.play('dash', false);
         this.updateState(PlayerState.DASH);
+    }
+
+    tryEvade() {
+        if (this.state != PlayerState.RUN) { return; }
+        if (!this.isCloseToWalker()) { return; }
+        this.play('evade', false);
+        this.updateState(PlayerState.EVADE);
     }
 
     stumble() {
@@ -67,6 +77,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.tweens.add({
             targets: this,
             duration: 500,
+            velocityX: 0,
+            onComplete: function (tween, targets) {
+                let player = targets[0];
+                player.scene.time.delayedCall(700, player.run, null, player);
+            }
+        });
+    }
+
+    bump() {
+        this.play('stumble', true);
+        this.updateState(PlayerState.STUMBLED);
+        this.velocityX = -50;
+        this.scene.tweens.add({
+            targets: this,
+            duration: 300,
             velocityX: 0,
             onComplete: function (tween, targets) {
                 let player = targets[0];
@@ -90,16 +115,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     updateVelocity() {
         let velocityX = this.velocityX;
         if (this.state === PlayerState.JUMP) velocityX *= 1.2;
+        if (this.state === PlayerState.EVADE) velocityX *= 1.4;
         if (this.state === PlayerState.DASH) velocityX *= 1.6;
         this.setVelocityX(velocityX);
     }
 
     handleInput() {
-        if (this.state === PlayerState.RUN) {
-            this.tryJump();
-        } else if (this.state === PlayerState.JUMP) {
-            this.tryDash();
-        }
+        this.tryDash();
+        this.tryEvade();
+        this.tryJump();
     }
 
     animComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
@@ -108,6 +132,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 console.log("JumpTime: ", this.scene.time.now - this.jumpTime);
                 this.run(3);
             }
+        }
+        if (animation.key === 'evade') {
+            this.run(3);
         }
         if (animation.key === 'dash') {
             console.log("DashTime: ", this.scene.time.now - this.jumpTime);
@@ -131,5 +158,32 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 player.scene.levelComplete = true;
             }
         });
+    }
+
+    isCloseToWalker() {
+        let walkers = this.scene.getWalkers();
+        for (let index = 0; index < walkers.length; index++) {
+            const walker = walkers[index];
+            if (walker.isBumped) {
+                continue;
+            }
+            if (Math.abs(walker.x - this.x) < 30) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    onRunIntoWalker() {
+        if (this.state === PlayerState.STUMBLED) { return; }
+        this.bump();
+    }
+
+    isEvading() {
+        return this.state === PlayerState.EVADE;
+    }
+
+    isStumbled() {
+        return this.state === PlayerState.STUMBLED;
     }
 }

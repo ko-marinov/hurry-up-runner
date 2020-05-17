@@ -1,5 +1,6 @@
 import 'phaser';
 import { Player } from '../player.ts';
+import { Walker } from '../walker';
 
 import tilesetImg from '../../assets/tilesets/city-tileset.png';
 import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
@@ -62,7 +63,18 @@ export class Level1 extends Phaser.Scene {
             key: 'stumble',
             frames: this.anims.generateFrameNumbers('char', { start: 91, end: 96 }),
             frameRate: 16,
-        })
+        });
+        this.anims.create({
+            key: 'walk',
+            frames: this.anims.generateFrameNumbers("char", { start: 13, end: 20 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'evade',
+            frames: this.anims.generateFrameNumbers('char', { start: 67, end: 70 }),
+            frameRate: 12,
+        });
 
         this.physics.add.collider(this.player, layer);
 
@@ -79,6 +91,38 @@ export class Level1 extends Phaser.Scene {
 
         this.bananas = this.physics.add.staticGroup();
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
+
+        this.walkers = [];
+
+        let walker = new Walker(this, {
+            fromX: 300,
+            fromY: 434,
+            toX: 200
+        });
+        this.physics.add.collider(walker, layer);
+        this.physics.add.overlap(this.player, walker, this.onRunIntoWalker, this.isRunIntoWalker, this);
+
+        this.walkers.push(walker);
+    }
+
+    getWalkers() {
+        return this.walkers;
+    }
+
+    isRunIntoWalker(player, walker) {
+        if (player.isEvading()) {
+            return false;
+        }
+        if (player.isStumbled() || walker.isBumped) {
+            return false;
+        }
+        return true;
+    }
+
+    onRunIntoWalker(player, walker) {
+        console.log("Run into walker");
+        player.onRunIntoWalker();
+        walker.onBumped();
     }
 
     start() {
