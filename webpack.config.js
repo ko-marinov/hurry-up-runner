@@ -32,6 +32,7 @@ module.exports = {
     plugins: [
         new CopyPlugin([
             { from: 'assets/**/*.json' },
+            { from: 'assets/**/*.mp3' },
         ]),
         new HtmlWebpackPlugin(),
         new ZipPlugin({
