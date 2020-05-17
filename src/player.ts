@@ -86,7 +86,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     bump() {
-        this.play('stumble', true);
+        this.play('bump', true);
         this.updateState(PlayerState.STUMBLED);
         this.velocityX = -50;
         this.scene.tweens.add({

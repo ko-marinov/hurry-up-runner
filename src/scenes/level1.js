@@ -67,7 +67,7 @@ export class Level1 extends Phaser.Scene {
         this.anims.create({
             key: 'bump',
             frames: this.anims.generateFrameNumbers('char', { start: 56, end: 60 }),
-            frameRate: 10,
+            frameRate: 20,
         });
         this.anims.create({
             key: 'fall',
@@ -77,7 +77,7 @@ export class Level1 extends Phaser.Scene {
         this.anims.create({
             key: 'dodge',
             frames: this.anims.generateFrameNumbers('char', { start: 84, end: 93 }),
-            frameRate: 20,
+            frameRate: 30,
         });
         this.anims.create({
             key: 'walk',

@@ -45,7 +45,11 @@ export class Walker extends Phaser.Physics.Arcade.Sprite {
         if (this.isBumped) { return; }
         this.isBumped = true;
         this.tween.stop();
-        this.play('stumble');
+        if (this.fromX > this.toX) {
+            this.play('bump');
+        } else {
+            this.play('stumble');
+        }
         let newX = this.x + 20;
         this.scene.tweens.add({
             targets: this,
