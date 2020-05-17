@@ -47,7 +47,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryJump() {
-        if (this.state != PlayerState.RUN) { return; }
+        if (this.state != PlayerState.RUN && this.state != PlayerState.DODGE) { return; }
+        if (this.isCloseToWalker()) { return; }
         if (!this.body.blocked.down) { return; }
         this.setVelocityY(-150);
         this.play('jump', false);
