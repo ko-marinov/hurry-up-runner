@@ -6,7 +6,7 @@ enum PlayerState {
     JUMP = 'JUMP',
     DASH = 'DASH',
     STUMBLED = 'STUNBLED',
-    EVADE = 'EVADE',
+    DODGE = 'DODGE',
     CHEER = 'CHEER'
 }
 
@@ -64,11 +64,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.updateState(PlayerState.DASH);
     }
 
-    tryEvade() {
+    tryDodge() {
         if (this.state != PlayerState.RUN) { return; }
         if (!this.isCloseToWalker()) { return; }
-        this.play('evade', false);
-        this.updateState(PlayerState.EVADE);
+        this.play('dodge', false);
+        this.updateState(PlayerState.DODGE);
     }
 
     stumble() {
@@ -115,14 +115,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     updateVelocity() {
         let velocityX = this.velocityX;
         if (this.state === PlayerState.JUMP) velocityX *= 1.2;
-        if (this.state === PlayerState.EVADE) velocityX *= 1.4;
+        if (this.state === PlayerState.DODGE) velocityX *= 1.4;
         if (this.state === PlayerState.DASH) velocityX *= 1.6;
         this.setVelocityX(velocityX);
     }
 
     handleInput() {
         this.tryDash();
-        this.tryEvade();
+        this.tryDodge();
         this.tryJump();
     }
 
@@ -133,7 +133,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 this.run(3);
             }
         }
-        if (animation.key === 'evade') {
+        if (animation.key === 'dodge') {
             this.run(3);
         }
         if (animation.key === 'dash') {
@@ -179,8 +179,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.bump();
     }
 
-    isEvading() {
-        return this.state === PlayerState.EVADE;
+    isDodging() {
+        return this.state === PlayerState.DODGE;
     }
 
     isStumbled() {
