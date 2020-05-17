@@ -6,6 +6,7 @@ export class MainMenu extends Phaser.Scene {
     }
 
     preload() {
+        this.load.audio('music-loop', '../../assets/sounds/music_loop.mp3');
     }
 
     create() {
@@ -22,27 +23,37 @@ export class MainMenu extends Phaser.Scene {
         this.restartButton = this.add.text(center_x, 100, 'RESTART LEVEL');
         this.restartButton.setInteractive().on('pointerdown', this.restartLevelBtnEvent, this);
 
+        this.toggleMusicButton = this.add.text(center_x, 150, 'MUSIC: ON');
+        this.toggleMusicButton.setInteractive().on('pointerdown', this.toggleMusicBtnEvent, this);
+        this.input.keyboard.on("keyup_M", this.toggleMusic, this);
+        this.isMuted = false;
+
         this.scene.bringToTop('MainMenu');
 
         this.hideAll();
         this.showStartScreen();
+
+        this.sound.play('music-loop', { loop: true });
     }
 
     showStartScreen() {
         this.scene.setVisible(true, 'MainMenu');
         this.startButton.setVisible(true);
+        this.toggleMusicButton.setVisible(true);
         this.input.keyboard.on("keyup_ENTER", this.startGame, this);
     }
 
     showPauseScreen() {
         this.scene.setVisible(true, 'MainMenu');
         this.resumeButton.setVisible(true);
+        this.toggleMusicButton.setVisible(true);
         this.input.keyboard.on("keyup_ESC", this.resumeGame, this);
     }
 
     showFailScreen() {
         this.scene.setVisible(true, 'MainMenu');
         this.restartButton.setVisible(true);
+        this.toggleMusicButton.setVisible(true);
         this.input.keyboard.on("keyup_ENTER", this.restartLevel, this);
     }
 
@@ -50,6 +61,7 @@ export class MainMenu extends Phaser.Scene {
         this.startButton.setVisible(false);
         this.resumeButton.setVisible(false);
         this.restartButton.setVisible(false);
+        this.toggleMusicButton.setVisible(false);
     }
 
     startGameBtnEvent(pointer, localX, localY, event) {
@@ -86,5 +98,20 @@ export class MainMenu extends Phaser.Scene {
         this.input.keyboard.off("keyup_ENTER", this.restartLevel, this, false);
         this.scene.setVisible(false, 'MainMenu');
         this.scene.get('Level1').restart();
+    }
+
+    toggleMusicBtnEvent(pointer, localX, localY, event) {
+        this.toggleMusic(event);
+    }
+
+    toggleMusic(event) {
+        event.stopPropagation();
+        if (this.isMuted) {
+            this.toggleMusicButton.setText("MUSIC: ON");
+        } else {
+            this.toggleMusicButton.setText("MUSIC: OFF");
+        }
+        this.isMuted = !this.isMuted;
+        this.sound.setMute(this.isMuted);
     }
 }
