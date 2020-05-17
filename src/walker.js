@@ -20,8 +20,11 @@ export class Walker extends Phaser.Physics.Arcade.Sprite {
     }
 
     walk() {
+        if (this.tween) {
+            this.tween.stop();
+        }
         let velocity = 30;
-        let time = 1000 * Math.abs(this.fromX - this.toX) / velocity;
+        let time = 1000 * Math.abs(this.x - this.toX) / velocity;
         this.setFlipX(this.fromX > this.toX);
         this.play('walk', true);
         this.tween = this.scene.tweens.add({

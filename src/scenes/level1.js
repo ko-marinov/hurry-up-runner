@@ -161,6 +161,11 @@ export class Level1 extends Phaser.Scene {
 
         this.player.setPosition(150, 322);
         this.start();
+
+        this.walkers.forEach(walker => {
+            walker.isBumped = false;
+            walker.walk();
+        });
     }
 
     isLevelComplete() {
