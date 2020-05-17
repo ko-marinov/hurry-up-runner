@@ -38,30 +38,45 @@ export class Level1 extends Phaser.Scene {
 
         this.anims.create({
             key: 'run',
-            frames: this.anims.generateFrameNumbers("char", { start: 13, end: 20 }),
-            frameRate: 16,
+            frames: this.anims.generateFrameNumbers("char", { start: 14, end: 28 }),
+            frameRate: 28,
             repeat: -1
         });
         this.anims.create({
             key: 'jump',
-            frames: this.anims.generateFrameNumbers('char', { start: 67, end: 70 }),
+            frames: this.anims.generateFrameNumbers('char', { start: 28, end: 34 }),
             frameRate: 12,
         });
         this.anims.create({
             key: 'dash',
-            frames: [{ key: 'char', frame: 18 }],
+            frames: [{ key: 'char', frame:30 }],
             frameRate: 2.5,
         });
         this.anims.create({
             key: 'cheers',
-            frames: this.anims.generateFrameNumbers('char', { start: 67, end: 70 }),
-            frameRate: 9,
+            frames: this.anims.generateFrameNumbers('char', { start: 0, end: 1 }),
+            frameRate: 4,
             repeat: -1
         });
         this.anims.create({
             key: 'stumble',
-            frames: this.anims.generateFrameNumbers('char', { start: 91, end: 96 }),
-            frameRate: 16,
+            frames: this.anims.generateFrameNumbers('char', { start: 42, end: 46 }),
+            frameRate: 20,
+        })
+        this.anims.create({
+            key: 'bump',
+            frames: this.anims.generateFrameNumbers('char', { start: 56, end: 60 }),
+            frameRate: 10,
+        })
+        this.anims.create({
+            key: 'fall',
+            frames: this.anims.generateFrameNumbers('char', { start: 70, end: 74 }),
+            frameRate: 10,
+        })
+        this.anims.create({
+            key: 'dodge',
+            frames: this.anims.generateFrameNumbers('char', { start: 84, end: 93 }),
+            frameRate: 20,
         })
 
         this.physics.add.collider(this.player, layer);
