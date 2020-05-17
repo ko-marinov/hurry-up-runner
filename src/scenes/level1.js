@@ -126,6 +126,9 @@ export class Level1 extends Phaser.Scene {
         if (player.isStumbled() || walker.isBumped) {
             return false;
         }
+        if (player.x > walker.x) {
+            return false;
+        }
         return true;
     }
 

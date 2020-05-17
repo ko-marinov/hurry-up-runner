@@ -164,10 +164,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         let walkers = this.scene.getWalkers();
         for (let index = 0; index < walkers.length; index++) {
             const walker = walkers[index];
-            if (walker.isBumped) {
+            if (walker.isBumped || this.x > walker.x) {
                 continue;
             }
-            if (Math.abs(walker.x - this.x) < 30) {
+            if (walker.x - this.x < 30) {
                 return true;
             }
         }
