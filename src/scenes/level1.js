@@ -55,13 +55,28 @@ export class Level1 extends Phaser.Scene {
         this.anims.create({
             key: 'cheers',
             frames: this.anims.generateFrameNumbers('char', { start: 0, end: 1 }),
-            frameRate: 2,
+            frameRate: 4,
             repeat: -1
         });
         this.anims.create({
             key: 'stumble',
             frames: this.anims.generateFrameNumbers('char', { start: 42, end: 46 }),
-            frameRate: 16,
+            frameRate: 20,
+        })
+        this.anims.create({
+            key: 'bump',
+            frames: this.anims.generateFrameNumbers('char', { start: 56, end: 60 }),
+            frameRate: 10,
+        })
+        this.anims.create({
+            key: 'fall',
+            frames: this.anims.generateFrameNumbers('char', { start: 70, end: 74 }),
+            frameRate: 10,
+        })
+        this.anims.create({
+            key: 'dodge',
+            frames: this.anims.generateFrameNumbers('char', { start: 84, end: 93 }),
+            frameRate: 20,
         })
 
         this.physics.add.collider(this.player, layer);
