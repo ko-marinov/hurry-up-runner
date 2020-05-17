@@ -14,7 +14,7 @@ export class MainMenu extends Phaser.Scene {
 
         let center_x = this.game.config.width / 2;
         this.startButton = this.add.text(center_x, 100, 'START GAME');
-        this.startButton.setInteractive().on('pointerdown', this.startGame, this);
+        this.startButton.setInteractive().on('pointerdown', this.startGameBtnEvent, this);
 
         this.resumeButton = this.add.text(center_x, 100, 'RESUME GAME');
         this.resumeButton.setInteractive().on('pointerdown', this.resumeGameBtnEvent, this);
@@ -31,6 +31,7 @@ export class MainMenu extends Phaser.Scene {
     showStartScreen() {
         this.scene.setVisible(true, 'MainMenu');
         this.startButton.setVisible(true);
+        this.input.keyboard.on("keyup_ENTER", this.startGame, this);
     }
 
     showPauseScreen() {
@@ -51,8 +52,14 @@ export class MainMenu extends Phaser.Scene {
         this.restartButton.setVisible(false);
     }
 
-    startGame(pointer, localX, localY, event) {
+    startGameBtnEvent(pointer, localX, localY, event) {
+        this.startGame(event);
+    }
+
+    startGame(event) {
         this.hideAll();
+        event.stopPropagation();
+        this.input.keyboard.off("keyup_ENTER", this.startGame, this, false);
         this.scene.setVisible(false, 'MainMenu');
         this.scene.get('Level1').start();
     }
