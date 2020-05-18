@@ -67,6 +67,8 @@ export class MainMenu extends Phaser.Scene {
         this.input.keyboard.on("keyup_M", this.toggleMusic, this);
         this.isMuted = false;
 
+        this.pressedButton = undefined;
+
         // Init screen layouts
         this.layouts = new Map();
         this.layouts.set(START_LAYOUT, { title: true, score: false, buttons: [UI_BTN_START, UI_BTN_TOGGLE_MUSIC], startY: 195 });
@@ -117,6 +119,7 @@ export class MainMenu extends Phaser.Scene {
         } else {
             gameObject.setFrame(0);
         }
+        this.pressedButton = undefined;
     }
 
     onGameObjectDown(pointer, gameObject, event) {
@@ -125,14 +128,20 @@ export class MainMenu extends Phaser.Scene {
         } else {
             gameObject.setFrame(2);
         }
+        this.pressedButton = gameObject;
     }
 
     onGameObjectUp(pointer, gameObject, event) {
+        let pressedButton = this.pressedButton;
+        this.pressedButton = undefined;
+
         if (gameObject === this.get(UI_BTN_TOGGLE_MUSIC)) {
             gameObject.setFrame(this.isMuted ? 3 : 2);
         } else {
             gameObject.setFrame(1);
         }
+
+        if (pressedButton != gameObject) { return; }
 
         if (gameObject === this.get(UI_BTN_START)) {
             this.startGame(event);
