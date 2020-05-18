@@ -3,6 +3,9 @@
  <editorsettings>
   <export target="level_1.json" format="json"/>
  </editorsettings>
+ <properties>
+  <property name="Time Limit" type="int" value="15000"/>
+ </properties>
  <tileset firstgid="1" name="city-tileset" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="25" columns="5">
   <image source="../tilesets/city-tileset.png" trans="ff00ff" width="90" height="90"/>
   <tile id="2">

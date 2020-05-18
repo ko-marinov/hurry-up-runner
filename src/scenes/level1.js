@@ -97,7 +97,15 @@ export class Level1 extends Phaser.Scene {
         let uicamera = this.cameras.add(0, 0, 720, 400, false, "uicamera");
         uicamera.scrollY = 1000;
 
-        this.textTime = this.add.text(590, 1010, "TIME: 0 s");
+        this.isLevelStarted = false;
+
+        this.levelData = new Map();
+        this.map.properties.forEach(function (prop) {
+            this.levelData.set(prop.name, prop.value);
+        }, this);
+
+        this.timeRemaining = this.levelData.get('Time Limit');
+        this.textTime = this.add.text(590, 1010, '');
 
         this.bananas = this.physics.add.staticGroup();
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
@@ -144,7 +152,8 @@ export class Level1 extends Phaser.Scene {
         this.initFinish();
 
         this.levelComplete = false;
-        this.timeFromStart = 0;
+        this.timeRemaining = this.levelData.get('Time Limit');
+        this.isLevelStarted = true;
         this.player.run();
     }
 
@@ -162,8 +171,10 @@ export class Level1 extends Phaser.Scene {
     }
 
     updateTimeFromStart(delta) {
-        this.timeFromStart += delta;
-        let timeString = (Math.round(this.timeFromStart) / 1000).toFixed(2);
+        if (this.isLevelStarted) {
+            this.timeRemaining -= delta;
+        }
+        let timeString = (Math.round(this.timeRemaining) / 1000).toFixed(2);
         this.textTime.setText("TIME: " + timeString + " s");
     }
 
