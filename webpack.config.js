@@ -33,8 +33,12 @@ module.exports = {
         new CopyPlugin([
             { from: 'assets/**/*.json' },
             { from: 'assets/**/*.mp3' },
+            { from: 'assets/**/*.ttf' },
         ]),
-        new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title: 'Hurry Up Runner',
+            template: 'index.html'
+        }),
         new ZipPlugin({
             filename: "hurry-up-runner.zip",
             exclude: /\.zip$/
