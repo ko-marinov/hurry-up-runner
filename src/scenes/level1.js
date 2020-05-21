@@ -5,6 +5,7 @@ import { Walker } from '../walker';
 import tilesetImg from '../../assets/tilesets/city-tileset.png';
 import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
 import mainCharSpritesheet from '../../assets/sprites/main_char.png';
+import npcSpritesheet1 from '../../assets/sprites/npc_1.png';
 
 var layer;
 var graphics;
@@ -20,6 +21,7 @@ export class Level1 extends Phaser.Scene {
         this.load.image('city-bg-tileset', bgTilesetImg);
         this.load.tilemapTiledJSON('map', '../assets/tilemaps/level_1.json');
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('npc1', npcSpritesheet1, { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
@@ -80,10 +82,20 @@ export class Level1 extends Phaser.Scene {
             frameRate: 30,
         });
         this.anims.create({
-            key: 'walk',
-            frames: this.anims.generateFrameNumbers("char", { start: 14, end: 28 }),
-            frameRate: 6,
+            key: 'npc1Walk',
+            frames: this.anims.generateFrameNumbers('npc1', { start: 5, end: 8 }),
+            frameRate: 8,
             repeat: -1
+        });
+        this.anims.create({
+            key: 'npc1Stumble',
+            frames: this.anims.generateFrameNumbers('npc1', { start: 10, end: 14 }),
+            frameRate: 12,
+        });
+        this.anims.create({
+            key: 'npc1Bump',
+            frames: this.anims.generateFrameNumbers('npc1', { start: 15, end: 19 }),
+            frameRate: 12,
         });
 
         this.physics.add.collider(this.player, layer);
