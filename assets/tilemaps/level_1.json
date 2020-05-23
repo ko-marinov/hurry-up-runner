@@ -181,6 +181,12 @@
  "nextlayerid":10,
  "nextobjectid":1,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"Time Limit",
+         "type":"int",
+         "value":15000
+        }],
  "renderorder":"right-up",
  "tiledversion":"1.3.4",
  "tileheight":16,
