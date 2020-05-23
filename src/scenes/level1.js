@@ -184,7 +184,7 @@ export class Level1 extends Phaser.Scene {
 
     updateTimeFromStart(delta) {
         if (this.isLevelStarted) {
-            this.timeRemaining -= delta;
+            this.timeRemaining = this.timeRemaining > delta ? this.timeRemaining - delta : 0;
         }
         let timeString = (Math.round(this.timeRemaining) / 1000).toFixed(2);
         this.textTime.setText("TIME: " + timeString + " s");
@@ -209,7 +209,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     isLevelFailed() {
-        return this.player.y > 500;
+        return this.player.y > 500 || this.timeRemaining === 0;
     }
 
     initBananas() {
