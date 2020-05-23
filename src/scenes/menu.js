@@ -182,11 +182,15 @@ export class MainMenu extends Phaser.Scene {
         this.uiElements.set(UI_BTN_RESUME, new UiButtonWithText(this, 0, 0, 'btn-resume', 0, 'Resume'));
         this.uiElements.set(UI_BTN_RESTART, new UiButtonWithText(this, 0, 0, 'btn-restart', 0, 'Restart'));
         this.uiElements.set(UI_BTN_EXIT, new UiButtonWithText(this, 0, 0, 'btn-exit', 0, 'Exit'));
+        this.uiElements.set(UI_BTN_NEXT_LEVEL, new UiButtonWithText(this, 0, 0, 'btn-next-level', 0, 'Next Level'));
+        this.uiElements.set(UI_BTN_REPEAT, new UiButtonWithText(this, 0, 0, 'btn-repeat', 0, 'Repeat'));
         this.uiElements.set(UI_BTN_TOGGLE_MUSIC, new UiToggleButton(this, 0, 0, 'btn-volume', 0, 2));
 
         this.get(UI_BTN_START).setCallback(this.startGame, this);
         this.get(UI_BTN_RESUME).setCallback(this.resumeGame, this);
         this.get(UI_BTN_RESTART).setCallback(this.restartLevel, this);
+        this.get(UI_BTN_NEXT_LEVEL).setCallback(this.startNextLevel, this);
+        this.get(UI_BTN_REPEAT).setCallback(this.restartLevel, this);
         this.get(UI_BTN_TOGGLE_MUSIC).setCallback(this.toggleMusic, this);
 
         this.input.keyboard.on("keyup_M", function () {
@@ -248,6 +252,12 @@ export class MainMenu extends Phaser.Scene {
         this.input.keyboard.on("keyup_ENTER", this.restartLevel, this);
     }
 
+    showVictoryScreen() {
+        this.scene.setVisible(true, 'MainMenu');
+        this.setLayout(VICTORY_LAYOUT);
+        this.input.keyboard.on("keyup_ENTER", this.restartLevel, this);
+    }
+
     hideAll() {
         this.uiElements.forEach(function (uiElem) {
             uiElem.setVisible(false);
@@ -276,6 +286,10 @@ export class MainMenu extends Phaser.Scene {
         this.input.keyboard.off("keyup_ENTER", this.restartLevel, this, false);
         this.scene.setVisible(false, 'MainMenu');
         this.scene.get('Level1').restart();
+    }
+
+    startNextLevel(event) {
+        this.restartLevel(event);
     }
 
     toggleMusic(isOff, event) {

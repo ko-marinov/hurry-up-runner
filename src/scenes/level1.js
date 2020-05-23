@@ -246,6 +246,7 @@ export class Level1 extends Phaser.Scene {
     onEnterFinish(player, finish) {
         player.onEnterFinishTile();
         this.physics.world.removeCollider(this.finishOverlapCollider);
+        this.scene.get('MainMenu').showVictoryScreen();
     }
 
     pause(event) {
