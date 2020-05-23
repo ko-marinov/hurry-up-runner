@@ -25,6 +25,131 @@ const PAUSE_LAYOUT = 'pause-layout';
 const FAIL_LAYOUT = 'fail-layout';
 const VICTORY_LAYOUT = 'victory-layout';
 
+class UiButton {
+    constructor(scene, x, y, texture, frame) {
+        this.image = scene.add.image(x, y, texture, frame);
+        this.image.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.image.width, this.image.height), Phaser.Geom.Rectangle.Contains);
+
+        this.isPressed = false;
+        this.setInitialListeners();
+    }
+
+    setInitialListeners() {
+        this.image.on('pointerover', function (pointer, localX, localY, event) {
+            this.image.setFrame(1);
+        }, this);
+        this.image.on('pointerout', function (pointer, localX, localY, event) {
+            this.image.setFrame(0);
+            this.isPressed = false;
+        }, this);
+        this.image.on('pointerdown', function (pointer, localX, localY, event) {
+            this.image.setFrame(2);
+            this.isPressed = true;
+        }, this);
+        this.image.on('pointerup', function (pointer, localX, localY, event) {
+            if (!this.isPressed) { return; }
+
+            this.press();
+            this.image.setFrame(1);
+        }, this);
+    }
+
+    setCallback(callback, context) {
+        this.onPressCallback = callback;
+        this.onPressContext = context;
+    }
+
+    setPosition(x, y) {
+        this.image.setPosition(x, y);
+    }
+
+    setVisible(isVisible) {
+        this.image.setVisible(isVisible);
+    }
+
+    press() {
+        this.isPressed = false;
+        if (!this.onPressCallback) {
+            console.log('[DEBUG]: On press callback not set');
+            console.log(this);
+            return;
+        }
+
+        this.onPressCallback.bind(this.onPressContext)(event);
+    }
+};
+
+class UiButtonWithText extends UiButton {
+    constructor(scene, x, y, texture, frame, text) {
+        super(scene, x, y, texture, frame);
+        if (text) {
+            this.label = scene.add.text(x, y, text, { fontFamily: 'vt323', fontSize: 24 });
+            this.updateLabelPos();
+        }
+    }
+
+    updateLabelPos() {
+        if (!this.label) { return; }
+        let x = this.image.x - this.label.width / 2;
+        let y = this.image.y - this.label.height / 2;
+        this.label.setPosition(x, y);
+    }
+
+    setPosition(x, y) {
+        super.setPosition(x, y);
+        this.updateLabelPos();
+    }
+
+    setVisible(isVisible) {
+        super.setVisible(isVisible);
+        if (this.label) {
+            this.label.setVisible(isVisible);
+        }
+    }
+}
+
+class UiToggleButton extends UiButton {
+    constructor(scene, x, y, texture, frame, states) {
+        super(scene, x, y, texture, frame);
+        this.states = states;
+        this.currentState = frame % states;
+    }
+
+    setInitialListeners() {
+        this.image.on('pointerover', function (pointer, localX, localY, event) {
+            this.image.setFrame(this.currentState + this.states);
+        }, this);
+        this.image.on('pointerout', function (pointer, localX, localY, event) {
+            this.image.setFrame(this.currentState);
+            this.isPressed = false;
+        }, this);
+        this.image.on('pointerdown', function (pointer, localX, localY, event) {
+            this.image.setFrame(this.currentState + 2 * this.states);
+            this.isPressed = true;
+        }, this);
+        this.image.on('pointerup', function (pointer, localX, localY, event) {
+            if (!this.isPressed) { return; }
+
+            this.press();
+            this.image.setFrame(this.currentState + this.states);
+        }, this);
+    }
+
+    press() {
+        this.currentState = (this.currentState + 1) % this.states;
+        this.image.setFrame(this.currentState);
+
+        this.isPressed = false;
+        if (!this.onPressCallback) {
+            console.log('[DEBUG]: On press callback not set');
+            console.log(this);
+            return;
+        }
+
+        this.onPressCallback.bind(this.onPressContext)(this.currentState, event);
+    }
+};
+
 export class MainMenu extends Phaser.Scene {
     constructor() {
         super("MainMenu");
@@ -53,27 +178,26 @@ export class MainMenu extends Phaser.Scene {
         this.uiElements = new Map();
         this.uiElements.set(UI_TITLE_IMG, this.add.image(center_x, 100, 'game-title'));
         this.uiElements.set(UI_SCORE_IMG, this.add.sprite(center_x, 90, 'ui-score-image'));
-        this.uiElements.set(UI_BTN_START, this.add.sprite(center_x, 200, 'btn-start').setInteractive());
-        this.uiElements.set(UI_BTN_RESUME, this.add.sprite(center_x, 200, 'btn-resume').setInteractive());
-        this.uiElements.set(UI_BTN_RESTART, this.add.sprite(center_x, 200, 'btn-restart').setInteractive());
-        this.uiElements.set(UI_BTN_EXIT, this.add.sprite(center_x, 200, 'btn-exit').setInteractive());
-        this.uiElements.set(UI_BTN_TOGGLE_MUSIC, this.add.sprite(center_x, 250, 'btn-volume').setInteractive());
+        this.uiElements.set(UI_BTN_START, new UiButtonWithText(this, 0, 0, 'btn-start', 0, 'Start'));
+        this.uiElements.set(UI_BTN_RESUME, new UiButtonWithText(this, 0, 0, 'btn-resume', 0, 'Resume'));
+        this.uiElements.set(UI_BTN_RESTART, new UiButtonWithText(this, 0, 0, 'btn-restart', 0, 'Restart'));
+        this.uiElements.set(UI_BTN_EXIT, new UiButtonWithText(this, 0, 0, 'btn-exit', 0, 'Exit'));
+        this.uiElements.set(UI_BTN_TOGGLE_MUSIC, new UiToggleButton(this, 0, 0, 'btn-volume', 0, 2));
 
-        this.input.on('gameobjectover', this.onGameObjectOver, this);
-        this.input.on('gameobjectout', this.onGameObjectOut, this);
-        this.input.on('gameobjectdown', this.onGameObjectDown, this);
-        this.input.on('gameobjectup', this.onGameObjectUp, this);
+        this.get(UI_BTN_START).setCallback(this.startGame, this);
+        this.get(UI_BTN_RESUME).setCallback(this.resumeGame, this);
+        this.get(UI_BTN_RESTART).setCallback(this.restartLevel, this);
+        this.get(UI_BTN_TOGGLE_MUSIC).setCallback(this.toggleMusic, this);
 
-        this.input.keyboard.on("keyup_M", this.toggleMusic, this);
-        this.isMuted = false;
-
-        this.pressedButton = undefined;
+        this.input.keyboard.on("keyup_M", function () {
+            this.get(UI_BTN_TOGGLE_MUSIC).press();
+        }, this);
 
         // Init screen layouts
         this.layouts = new Map();
         this.layouts.set(START_LAYOUT, { title: true, score: false, buttons: [UI_BTN_START, UI_BTN_TOGGLE_MUSIC], startY: 195 });
         this.layouts.set(PAUSE_LAYOUT, { title: false, score: false, buttons: [UI_BTN_RESUME, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 125 });
-        this.layouts.set(FAIL_LAYOUT, { title: false, score: true, buttons: [UI_BTN_RESTART, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 160 });
+        this.layouts.set(FAIL_LAYOUT, { title: false, score: false, buttons: [UI_BTN_RESTART, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 125 });
         this.layouts.set(VICTORY_LAYOUT, { title: false, score: true, buttons: [UI_BTN_NEXT_LEVEL, UI_BTN_REPEAT, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 160 });
 
         this.scene.bringToTop('MainMenu');
@@ -96,62 +220,14 @@ export class MainMenu extends Phaser.Scene {
         if (layout.score) {
             this.get(UI_SCORE_IMG).setVisible(true);
         }
+        let localX = this.game.config.width / 2;
         let localY = layout.startY;
         layout.buttons.forEach(btn => {
             let uiBtn = this.get(btn);
-            uiBtn.y = localY;
+            uiBtn.setPosition(localX, localY);
             uiBtn.setVisible(true);
             localY += 45;
         }, this);
-    }
-
-    onGameObjectOver(pointer, gameObject, event) {
-        if (gameObject === this.get(UI_BTN_TOGGLE_MUSIC)) {
-            gameObject.setFrame(this.isMuted ? 3 : 2);
-        } else {
-            gameObject.setFrame(1);
-        }
-    }
-
-    onGameObjectOut(pointer, gameObject, event) {
-        if (gameObject === this.get(UI_BTN_TOGGLE_MUSIC)) {
-            gameObject.setFrame(this.isMuted ? 1 : 0);
-        } else {
-            gameObject.setFrame(0);
-        }
-        this.pressedButton = undefined;
-    }
-
-    onGameObjectDown(pointer, gameObject, event) {
-        if (gameObject === this.get(UI_BTN_TOGGLE_MUSIC)) {
-            gameObject.setFrame(this.isMuted ? 5 : 4);
-        } else {
-            gameObject.setFrame(2);
-        }
-        this.pressedButton = gameObject;
-    }
-
-    onGameObjectUp(pointer, gameObject, event) {
-        let pressedButton = this.pressedButton;
-        this.pressedButton = undefined;
-
-        if (gameObject === this.get(UI_BTN_TOGGLE_MUSIC)) {
-            gameObject.setFrame(this.isMuted ? 3 : 2);
-        } else {
-            gameObject.setFrame(1);
-        }
-
-        if (pressedButton != gameObject) { return; }
-
-        if (gameObject === this.get(UI_BTN_START)) {
-            this.startGame(event);
-        } else if (gameObject === this.get(UI_BTN_RESUME)) {
-            this.resumeGame(event);
-        } else if (gameObject === this.get(UI_BTN_RESTART)) {
-            this.restartLevel(event);
-        } else if (gameObject === this.get(UI_BTN_TOGGLE_MUSIC)) {
-            this.toggleMusic(event);
-        }
     }
 
     showStartScreen() {
@@ -202,14 +278,8 @@ export class MainMenu extends Phaser.Scene {
         this.scene.get('Level1').restart();
     }
 
-    toggleMusic(event) {
+    toggleMusic(isOff, event) {
         event.stopPropagation();
-        if (this.isMuted) {
-            this.get(UI_BTN_TOGGLE_MUSIC).setFrame(2);
-        } else {
-            this.get(UI_BTN_TOGGLE_MUSIC).setFrame(3);
-        }
-        this.isMuted = !this.isMuted;
-        this.sound.setMute(this.isMuted);
+        this.sound.setMute(isOff);
     }
 }
