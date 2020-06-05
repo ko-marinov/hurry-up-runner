@@ -46,6 +46,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.updateState(PlayerState.RUN);
     }
 
+    tryRun() {
+        if (this.state != PlayerState.JUMP && this.state != PlayerState.DASH) { return; }
+        if (!this.body.blocked.down) { return; }
+        this.run();
+    }
+
     tryJump() {
         if (this.state != PlayerState.RUN && this.state != PlayerState.DODGE) { return; }
         if (this.isCloseToWalker()) { return; }
@@ -124,6 +130,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     handleInput() {
         this.tryDash();
         this.tryDodge();
+        this.tryRun();
         this.tryJump();
     }
 
