@@ -10,9 +10,15 @@ enum PlayerState {
     CHEER = 'CHEER'
 }
 
+const VELOCITY_RUN = 100;
+const VELOCITY_JUMP = VELOCITY_RUN * 1.8;
+const VELOCITY_DASH = VELOCITY_RUN * 2.4;
+const VELOCITY_DODGE = VELOCITY_RUN * 1.8;
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
     velocityX: number;
     jumpTime: number;
+    impulseTween: Phaser.Tweens.Tween;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'char');
@@ -24,6 +30,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         this.body.setOffset(10, 10);
         this.body.setSize(10, 20, false);
+        this.jumpTime = 0;
 
         this.on('animationcomplete', this.animComplete, this);
 
@@ -33,17 +40,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     idle() {
-        this.jumpTime = 0;
         this.velocityX = 0;
         this.play('idle', true);
         this.setState(PlayerState.IDLE);
     }
 
     run(frame: number = 0) {
-        this.jumpTime = 0;
-        this.velocityX = 100;
+        this.velocityX = VELOCITY_RUN;
         this.play('run', true, frame);
         this.updateState(PlayerState.RUN);
+    }
+
+    tryRun() {
+        if (this.state != PlayerState.JUMP && this.state != PlayerState.DASH) { return; }
+        if (!this.body.blocked.down) { return; }
+        this.run();
     }
 
     tryJump() {
@@ -51,6 +62,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.isCloseToWalker()) { return; }
         if (!this.body.blocked.down) { return; }
         this.setVelocityY(-150);
+        this.applyVelocityImpulse(VELOCITY_JUMP, 500);
         this.play('jump', false);
         this.jumpTime = this.scene.time.now;
         this.updateState(PlayerState.JUMP);
@@ -60,7 +72,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.state != PlayerState.JUMP) { return; }
         let timePastFromJump = this.scene.time.now - this.jumpTime;
         if (timePastFromJump > 200) { return; }
-        this.setVelocityY(-130);
+        this.setVelocityY(-100);
+        this.applyVelocityImpulse(VELOCITY_DASH, 800);
         this.play('dash', false);
         this.updateState(PlayerState.DASH);
     }
@@ -68,11 +81,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     tryDodge() {
         if (this.state != PlayerState.RUN) { return; }
         if (!this.isCloseToWalker()) { return; }
+        this.applyVelocityImpulse(VELOCITY_DODGE, 300);
         this.play('dodge', false);
         this.updateState(PlayerState.DODGE);
     }
 
     stumble() {
+        if (this.impulseTween) { this.impulseTween.stop(); }
         this.play('stumble', true);
         this.updateState(PlayerState.STUMBLED);
         this.scene.tweens.add({
@@ -87,6 +102,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     bump() {
+        if (this.impulseTween) { this.impulseTween.stop(); }
         this.play('bump', true);
         this.updateState(PlayerState.STUMBLED);
         this.velocityX = -50;
@@ -114,16 +130,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     updateVelocity() {
-        let velocityX = this.velocityX;
-        if (this.state === PlayerState.JUMP) velocityX *= 1.2;
-        if (this.state === PlayerState.DODGE) velocityX *= 1.4;
-        if (this.state === PlayerState.DASH) velocityX *= 1.6;
-        this.setVelocityX(velocityX);
+        this.setVelocityX(this.velocityX);
     }
 
     handleInput() {
         this.tryDash();
         this.tryDodge();
+        this.tryRun();
         this.tryJump();
     }
 
@@ -186,5 +199,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     isStumbled() {
         return this.state === PlayerState.STUMBLED;
+    }
+
+    applyVelocityImpulse(newVelocity, recovery) {
+        this.velocityX = newVelocity;
+        if (this.impulseTween) { this.impulseTween.stop(); }
+        this.impulseTween = this.scene.tweens.add({
+            targets: this,
+            duration: recovery,
+            velocityX: VELOCITY_RUN,
+            ease: "Quad.easeOut"
+        });
     }
 }
