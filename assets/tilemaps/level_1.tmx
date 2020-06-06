@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="right-up" width="64" height="17" tilewidth="16" tileheight="16" infinite="1" nextlayerid="10" nextobjectid="1">
+<map version="1.2" tiledversion="1.3.5" orientation="orthogonal" renderorder="right-up" width="64" height="17" tilewidth="16" tileheight="16" infinite="1" nextlayerid="11" nextobjectid="17">
  <editorsettings>
   <export target="level_1.json" format="json"/>
  </editorsettings>
@@ -361,4 +361,63 @@
 </chunk>
   </data>
  </layer>
+ <objectgroup id="10" name="Positions">
+  <object id="1" name="PlayerStartPos" x="150" y="448">
+   <point/>
+  </object>
+  <object id="2" name="WalkerPath_1" type="WalkerPath" x="200" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="true"/>
+   </properties>
+   <polyline points="0,0 104,0"/>
+  </object>
+  <object id="9" name="WalkerPath_2" type="WalkerPath" x="512" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="false"/>
+   </properties>
+   <polyline points="0,0 142,0"/>
+  </object>
+  <object id="10" name="WalkerPath_3" type="WalkerPath" x="559" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="true"/>
+   </properties>
+   <polyline points="0,0 135.5,0"/>
+  </object>
+  <object id="11" name="WalkerPath_4" type="WalkerPath" x="734" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="true"/>
+   </properties>
+   <polyline points="0,0 186.5,0"/>
+  </object>
+  <object id="12" name="WalkerPath_5" type="WalkerPath" x="800.5" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="false"/>
+   </properties>
+   <polyline points="0,0 110,0"/>
+  </object>
+  <object id="13" name="WalkerPath_6" type="WalkerPath" x="1200" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="false"/>
+   </properties>
+   <polyline points="0,0 186.5,0"/>
+  </object>
+  <object id="14" name="WalkerPath_7" type="WalkerPath" x="777.5" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="true"/>
+   </properties>
+   <polyline points="0,0 374.5,0"/>
+  </object>
+  <object id="15" name="WalkerPath_8" type="WalkerPath" x="1248" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="false"/>
+   </properties>
+   <polyline points="0,0 274,0"/>
+  </object>
+  <object id="16" name="WalkerPath_9" type="WalkerPath" x="1353" y="448">
+   <properties>
+    <property name="inverse" type="bool" value="true"/>
+   </properties>
+   <polyline points="0,0 125.5,0"/>
+  </object>
+ </objectgroup>
 </map>
