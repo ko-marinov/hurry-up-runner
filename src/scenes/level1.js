@@ -11,6 +11,12 @@ var layer;
 var graphics;
 var tileset;
 
+function GetObjectByName(objectLayer, name) {
+    return objectLayer.objects.find(function(elem, index, arr) {
+        return elem['name'] == name;
+    }); 
+}
+
 export class Level1 extends Phaser.Scene {
     constructor() {
         super("Level1");
@@ -35,9 +41,13 @@ export class Level1 extends Phaser.Scene {
         layer = this.map.createStaticLayer(2, tileset);
         this.map.setCollision([1, 2, 6, 7, 8, 10], true, true, layer);
 
+        this.positionsLayer = this.map.getObjectLayer('Positions');
+
         this.cameras.main.setBackgroundColor("#87ceeb");
 
-        this.player = new Player(this, 150, 434);
+        this.playerStartPos = GetObjectByName(this.positionsLayer, 'PlayerStartPos');
+        
+        this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y).setOrigin(0.5, 1);
 
         this.registerAnimations();
 
@@ -45,7 +55,7 @@ export class Level1 extends Phaser.Scene {
 
         this.input.keyboard.on("keyup_R", this.restart, this);
 
-        this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 50);
+        this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 65);
         this.cameras.main.setZoom(2);
         this.cameras.main.setBounds(layer.x, layer.y, layer.width, layer.height);
 
@@ -138,7 +148,7 @@ export class Level1 extends Phaser.Scene {
         this.bananas.clear(true, true);
         this.physics.world.removeCollider(this.finishOverlapCollider);
 
-        this.player.setPosition(150, 322);
+        this.player.setPosition(this.playerStartPos.x, this.playerStartPos.y);
         this.start();
 
         this.walkers.forEach(walker => {
