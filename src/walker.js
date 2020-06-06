@@ -36,6 +36,11 @@ export class Walker extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
+    walkFromStart() {
+        this.x = this.fromX;
+        this.walk();
+    }
+
     onReachDestination(event, target) {
         [this.fromX, this.toX] = [this.toX, this.fromX];
         this.walk();

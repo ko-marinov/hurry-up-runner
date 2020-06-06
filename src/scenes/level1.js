@@ -12,9 +12,20 @@ var graphics;
 var tileset;
 
 function GetObjectByName(objectLayer, name) {
-    return objectLayer.objects.find(function(elem, index, arr) {
+    return objectLayer.objects.find(function (elem, index, arr) {
         return elem['name'] == name;
-    }); 
+    });
+}
+
+function GetObjectsByType(objectLayer, type) {
+    let objects = [];
+    for (let index = 0; index < objectLayer.objects.length; index++) {
+        const element = objectLayer.objects[index];
+        if (element['type'] == type) {
+            objects.push(element);
+        }
+    }
+    return objects;
 }
 
 export class Level1 extends Phaser.Scene {
@@ -46,7 +57,7 @@ export class Level1 extends Phaser.Scene {
         this.cameras.main.setBackgroundColor("#87ceeb");
 
         this.playerStartPos = GetObjectByName(this.positionsLayer, 'PlayerStartPos');
-        
+
         this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y).setOrigin(0.5, 1);
 
         this.registerAnimations();
@@ -75,17 +86,7 @@ export class Level1 extends Phaser.Scene {
         this.bananas = this.physics.add.staticGroup();
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
 
-        this.walkers = [];
-
-        let walker = new Walker(this, {
-            fromX: 300,
-            fromY: 434,
-            toX: 200
-        });
-        this.physics.add.collider(walker, layer);
-        this.physics.add.overlap(this.player, walker, this.onRunIntoWalker, this.isRunIntoWalker, this);
-
-        this.walkers.push(walker);
+        this.initWalkers();
     }
 
     getWalkers() {
@@ -153,7 +154,7 @@ export class Level1 extends Phaser.Scene {
 
         this.walkers.forEach(walker => {
             walker.isBumped = false;
-            walker.walk();
+            walker.walkFromStart();
         });
     }
 
@@ -200,6 +201,29 @@ export class Level1 extends Phaser.Scene {
         player.onEnterFinishTile();
         this.physics.world.removeCollider(this.finishOverlapCollider);
         this.scene.get('MainMenu').showVictoryScreen();
+    }
+
+    initWalkers() {
+        this.walkers = [];
+
+        let walkerPaths = GetObjectsByType(this.positionsLayer, 'WalkerPath');
+        walkerPaths.forEach(path => {
+            console.log(path);
+            let inverse = path.properties[0].value;
+            let x = path.x;
+            let y = path.y;
+
+            let walker = new Walker(this, {
+                fromX: inverse ? x + path.polyline[1].x : x,
+                toX: inverse ? x : x + path.polyline[1].x,
+                fromY: y
+            });
+
+            this.physics.add.collider(walker, layer);
+            this.physics.add.overlap(this.player, walker, this.onRunIntoWalker, this.isRunIntoWalker, this);
+
+            this.walkers.push(walker);
+        });
     }
 
     pause(event) {
