@@ -19,11 +19,15 @@ const UI_BTN_NEXT_LEVEL = 'btnNextLevel';
 const UI_BTN_REPEAT = 'btnRepeat';
 const UI_BTN_EXIT = 'btnExit';
 const UI_BTN_TOGGLE_MUSIC = 'btnToggleMusic';
+const UI_BTN_SELECT_LEVEL_1 = 'btnSelectLevel1';
+const UI_BTN_SELECT_LEVEL_2 = 'btnSelectLevel2';
+const UI_BTN_SELECT_LEVEL_3 = 'btnSelectLevel3';
 
 const START_LAYOUT = 'start-layout';
 const PAUSE_LAYOUT = 'pause-layout';
 const FAIL_LAYOUT = 'fail-layout';
 const VICTORY_LAYOUT = 'victory-layout';
+const SELECT_LEVEL_LAYOUT = 'level-select-layout';
 
 class UiButton {
     constructor(scene, x, y, texture, frame) {
@@ -185,13 +189,19 @@ export class MainMenu extends Phaser.Scene {
         this.uiElements.set(UI_BTN_NEXT_LEVEL, new UiButtonWithText(this, 0, 0, 'btn-next-level', 0, 'Next Level'));
         this.uiElements.set(UI_BTN_REPEAT, new UiButtonWithText(this, 0, 0, 'btn-repeat', 0, 'Repeat'));
         this.uiElements.set(UI_BTN_TOGGLE_MUSIC, new UiToggleButton(this, 0, 0, 'btn-volume', 0, 2));
+        this.uiElements.set(UI_BTN_SELECT_LEVEL_1, new UiButtonWithText(this, 0, 0, 'btn-start', 0, 'Level 1'));
+        this.uiElements.set(UI_BTN_SELECT_LEVEL_2, new UiButtonWithText(this, 0, 0, 'btn-start', 0, 'Level 2'));
+        this.uiElements.set(UI_BTN_SELECT_LEVEL_3, new UiButtonWithText(this, 0, 0, 'btn-start', 0, 'Level 3'));
 
-        this.get(UI_BTN_START).setCallback(this.startGame, this);
+        this.get(UI_BTN_START).setCallback(this.showSelectLevelScreen, this);
         this.get(UI_BTN_RESUME).setCallback(this.resumeGame, this);
         this.get(UI_BTN_RESTART).setCallback(this.restartLevel, this);
         this.get(UI_BTN_NEXT_LEVEL).setCallback(this.startNextLevel, this);
         this.get(UI_BTN_REPEAT).setCallback(this.restartLevel, this);
         this.get(UI_BTN_TOGGLE_MUSIC).setCallback(this.toggleMusic, this);
+        this.get(UI_BTN_SELECT_LEVEL_1).setCallback(this.startGame, this);
+        this.get(UI_BTN_SELECT_LEVEL_2).setCallback(this.startGame, this);
+        this.get(UI_BTN_SELECT_LEVEL_3).setCallback(this.startGame, this);
 
         this.input.keyboard.on("keyup_M", function () {
             this.get(UI_BTN_TOGGLE_MUSIC).press();
@@ -203,6 +213,7 @@ export class MainMenu extends Phaser.Scene {
         this.layouts.set(PAUSE_LAYOUT, { title: false, score: false, buttons: [UI_BTN_RESUME, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 125 });
         this.layouts.set(FAIL_LAYOUT, { title: false, score: false, buttons: [UI_BTN_RESTART, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 125 });
         this.layouts.set(VICTORY_LAYOUT, { title: false, score: true, buttons: [UI_BTN_NEXT_LEVEL, UI_BTN_REPEAT, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 160 });
+        this.layouts.set(SELECT_LEVEL_LAYOUT, { title: false, score: false, buttons: [UI_BTN_SELECT_LEVEL_1, UI_BTN_SELECT_LEVEL_2, UI_BTN_SELECT_LEVEL_3], startY: 125 });
 
         this.scene.bringToTop('MainMenu');
 
@@ -217,6 +228,7 @@ export class MainMenu extends Phaser.Scene {
     }
 
     setLayout(layoutName) {
+        this.hideAll();
         let layout = this.layouts.get(layoutName);
         if (layout.title) {
             this.get(UI_TITLE_IMG).setVisible(true);
@@ -234,10 +246,17 @@ export class MainMenu extends Phaser.Scene {
         }, this);
     }
 
+    showSelectLevelScreen() {
+        this.setLayout(SELECT_LEVEL_LAYOUT);
+        this.input.keyboard.off("keyup_ENTER", this.showSelectLevelScreen, this, false);
+        this.input.keyboard.on("keyup_ESC", this.showStartScreen, this);
+    }
+
     showStartScreen() {
         this.scene.setVisible(true, 'MainMenu');
         this.setLayout(START_LAYOUT);
-        this.input.keyboard.on("keyup_ENTER", this.startGame, this);
+        this.input.keyboard.off("keyup_ESC", this.showStartScreen, this, false);
+        this.input.keyboard.on("keyup_ENTER", this.showSelectLevelScreen, this);
     }
 
     showPauseScreen() {
@@ -267,7 +286,6 @@ export class MainMenu extends Phaser.Scene {
     startGame(event) {
         this.hideAll();
         event.stopPropagation();
-        this.input.keyboard.off("keyup_ENTER", this.startGame, this, false);
         this.scene.setVisible(false, 'MainMenu');
         this.scene.get('Level1').start();
     }
