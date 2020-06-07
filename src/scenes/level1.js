@@ -125,6 +125,11 @@ class LevelBase extends Phaser.Scene {
         this.initBananas();
         this.initFinish();
 
+        this.walkers.forEach(walker => {
+            walker.isBumped = false;
+            walker.walkFromStart();
+        });
+
         this.levelComplete = false;
         this.timeRemaining = this.levelData.get('Time Limit');
         this.isLevelStarted = true;
@@ -159,11 +164,6 @@ class LevelBase extends Phaser.Scene {
 
         this.player.setPosition(this.playerStartPos.x, this.playerStartPos.y);
         this.start();
-
-        this.walkers.forEach(walker => {
-            walker.isBumped = false;
-            walker.walkFromStart();
-        });
     }
 
     isLevelComplete() {
