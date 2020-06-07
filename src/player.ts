@@ -58,9 +58,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryJump() {
-        if (this.state != PlayerState.RUN && this.state != PlayerState.DODGE) { return; }
-        if (this.isCloseToWalker()) { return; }
-        if (!this.body.blocked.down) { return; }
+        if (this.state != PlayerState.RUN && this.state != PlayerState.DODGE) {
+            return;
+        }
+        if (this.isCloseToWalker()) {
+            return;
+        }
+        if (!this.body.blocked.down) {
+            return;
+        }
         this.setVelocityY(-150);
         this.applyVelocityImpulse(VELOCITY_JUMP, 500);
         this.play('jump', false);
@@ -79,8 +85,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryDodge() {
-        if (this.state != PlayerState.RUN) { return; }
-        if (!this.isCloseToWalker()) { return; }
+        if (this.state != PlayerState.RUN && this.state != PlayerState.DODGE) {
+            return;
+        }
+        if (!this.isCloseToWalker()) {
+            return;
+        }
         this.applyVelocityImpulse(VELOCITY_DODGE, 300);
         this.play('dodge', false);
         this.updateState(PlayerState.DODGE);
@@ -134,9 +144,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleInput() {
+        this.tryRun();
         this.tryDash();
         this.tryDodge();
-        this.tryRun();
         this.tryJump();
     }
 
