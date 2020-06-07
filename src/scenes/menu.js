@@ -173,7 +173,6 @@ export class MainMenu extends Phaser.Scene {
     }
 
     create() {
-        this.scene.launch('Level1');
         this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 0.3)');
 
         let center_x = this.game.config.width / 2;
@@ -199,9 +198,18 @@ export class MainMenu extends Phaser.Scene {
         this.get(UI_BTN_NEXT_LEVEL).setCallback(this.startNextLevel, this);
         this.get(UI_BTN_REPEAT).setCallback(this.restartLevel, this);
         this.get(UI_BTN_TOGGLE_MUSIC).setCallback(this.toggleMusic, this);
-        this.get(UI_BTN_SELECT_LEVEL_1).setCallback(this.startGame, this);
-        this.get(UI_BTN_SELECT_LEVEL_2).setCallback(this.startGame, this);
-        this.get(UI_BTN_SELECT_LEVEL_3).setCallback(this.startGame, this);
+        this.get(UI_BTN_SELECT_LEVEL_1).setCallback(function (event) {
+            this.currentLevel = 'Level1';
+            this.startGame(event);
+        }, this);
+        this.get(UI_BTN_SELECT_LEVEL_2).setCallback(function (event) {
+            this.currentLevel = 'Level2';
+            this.startGame(event);
+        }, this);
+        this.get(UI_BTN_SELECT_LEVEL_3).setCallback(function (event) {
+            this.currentLevel = 'Level3';
+            this.startGame(event);
+        }, this);
 
         this.input.keyboard.on("keyup_M", function () {
             this.get(UI_BTN_TOGGLE_MUSIC).press();
@@ -287,7 +295,7 @@ export class MainMenu extends Phaser.Scene {
         this.hideAll();
         event.stopPropagation();
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get('Level1').start();
+        this.scene.launch(this.currentLevel);
     }
 
     resumeGame(event) {
@@ -295,7 +303,7 @@ export class MainMenu extends Phaser.Scene {
         event.stopPropagation();
         this.input.keyboard.off("keyup_ESC", this.resumeGame, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get('Level1').resume();
+        this.scene.get(this.currentLevel).resume();
     }
 
     restartLevel(event) {
@@ -303,7 +311,7 @@ export class MainMenu extends Phaser.Scene {
         event.stopPropagation();
         this.input.keyboard.off("keyup_ENTER", this.restartLevel, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get('Level1').restart();
+        this.scene.get(this.currentLevel).restart();
     }
 
     startNextLevel(event) {

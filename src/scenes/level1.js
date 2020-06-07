@@ -28,15 +28,17 @@ function GetObjectsByType(objectLayer, type) {
     return objects;
 }
 
-export class Level1 extends Phaser.Scene {
-    constructor() {
-        super("Level1");
+class LevelBase extends Phaser.Scene {
+    constructor(levelName, levelFilename) {
+        super(levelName);
+        this.levelName = levelName
+        this.levelFilename = levelFilename;
     }
 
     preload() {
         this.load.image('city-tileset', tilesetImg);
         this.load.image('city-bg-tileset', bgTilesetImg);
-        this.load.tilemapTiledJSON('map', '../assets/tilemaps/level_1.json');
+        this.load.tilemapTiledJSON('map', this.levelFilename);
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('npc1', npcSpritesheet1, { frameWidth: 32, frameHeight: 32 });
     }
@@ -87,6 +89,12 @@ export class Level1 extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
 
         this.initWalkers();
+
+        this.preStart();
+    }
+
+    preStart() {
+        this.time.delayedCall(1000, this.start, null, this);
     }
 
     getWalkers() {
@@ -125,7 +133,7 @@ export class Level1 extends Phaser.Scene {
 
     update(time, delta) {
         if (this.isLevelFailed()) {
-            this.scene.setActive(false, 'Level1');
+            this.scene.setActive(false, this.levelName);
             this.scene.get('MainMenu').showFailScreen();
         }
         else if (this.isLevelComplete()) {
@@ -145,7 +153,7 @@ export class Level1 extends Phaser.Scene {
     }
 
     restart() {
-        this.scene.setActive(true, 'Level1');
+        this.scene.setActive(true, this.levelName);
         this.bananas.clear(true, true);
         this.physics.world.removeCollider(this.finishOverlapCollider);
 
@@ -228,12 +236,12 @@ export class Level1 extends Phaser.Scene {
 
     pause(event) {
         event.stopPropagation();
-        this.scene.setActive(false, 'Level1');
+        this.scene.setActive(false, this.levelName);
         this.scene.get('MainMenu').showPauseScreen();
     }
 
     resume() {
-        this.scene.setActive(true, 'Level1');
+        this.scene.setActive(true, this.levelName);
     }
 
     registerAnimations() {
@@ -295,5 +303,24 @@ export class Level1 extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('npc1', { start: 15, end: 19 }),
             frameRate: 12,
         });
+    }
+}
+
+
+export class Level1 extends LevelBase {
+    constructor() {
+        super('Level1', '../assets/tilemaps/level_1.json');
+    }
+}
+
+export class Level2 extends LevelBase {
+    constructor() {
+        super('Level2', '../assets/tilemaps/level_1.json');
+    }
+}
+
+export class Level3 extends LevelBase {
+    constructor() {
+        super('Level3', '../assets/tilemaps/level_1.json');
     }
 }
