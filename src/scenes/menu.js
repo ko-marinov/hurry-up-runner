@@ -1,4 +1,5 @@
 import 'phaser';
+import { Player } from '../player.ts';
 
 import btnStartImg from '../../assets/images/button_start.png';
 import btnExitImg from '../../assets/images/button_exit.png';
@@ -9,6 +10,9 @@ import btnResumeImg from '../../assets/images/button_resume.png';
 import btnVolumeImg from '../../assets/images/button-volume.png';
 import titleImg from '../../assets/images/game_name.png';
 import scoreImg from '../../assets/images/total_score.png';
+import tilesetImg from '../../assets/tilesets/city-tileset.png';
+import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
+import mainCharSpritesheet from '../../assets/sprites/main_char.png';
 
 const UI_TITLE_IMG = 'title';
 const UI_SCORE_IMG = 'score';
@@ -170,10 +174,43 @@ export class MainMenu extends Phaser.Scene {
         this.load.spritesheet('btn-volume', btnVolumeImg, { frameWidth: 40, frameHeight: 40 });
         this.load.spritesheet('ui-score-image', scoreImg, { frameWidth: 252, frameHeight: 83 });
         this.load.audio('music-loop', '../../assets/sounds/music_loop.mp3');
+
+        this.load.image('city-tileset', tilesetImg);
+        this.load.image('city-bg-tileset', bgTilesetImg);
+        this.load.tilemapTiledJSON('menu-map', '../assets/tilemaps/menu.json');
+        this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
-        this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 0.3)');
+        this.map = this.make.tilemap({ key: 'menu-map' });
+
+        var tileset = this.map.addTilesetImage('city-tileset');
+        let bg_tileset = this.map.addTilesetImage('bg', 'city-bg-tileset');
+        var layer = this.map.createStaticLayer(0, [tileset, bg_tileset]);
+        this.map.setCollision([1, 2, 6, 7, 8, 10], true, true, layer);
+
+        this.cameras.main.setZoom(1);
+        this.cameras.main.setBackgroundColor("#87ceeb");
+
+        let bgCamera = this.cameras.add(0, 0, 720, 400, false, "bgCamera");
+
+        bgCamera.setZoom(2);
+        bgCamera.setScroll(-24, 385);
+
+        let positionsLayer = this.map.getObjectLayer('Positions');
+        this.playerStartPos = positionsLayer.objects.find(function (elem, index, arr) {
+            return elem['name'] == 'PlayerStartPos';
+        });
+        this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y)
+        this.player.setOrigin(0.5, 1);
+        this.anims.create({
+            key: 'idle',
+            frames: this.anims.generateFrameNumbers('char', { start: 0, end: 1 }),
+            frameRate: 2,
+            repeat: -1
+        });
+        this.player.play('idle');
+        this.physics.add.collider(this.player, layer);
 
         let center_x = this.game.config.width / 2;
 
@@ -293,6 +330,8 @@ export class MainMenu extends Phaser.Scene {
 
     startGame(event) {
         this.hideAll();
+        this.cameras.getCamera('bgCamera').setVisible(false);
+        this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 0.3)');
         event.stopPropagation();
         this.scene.setVisible(false, 'MainMenu');
         this.scene.launch(this.currentLevel);
