@@ -189,9 +189,6 @@ export class MainMenu extends Phaser.Scene {
         var layer = this.map.createStaticLayer(0, [tileset, bg_tileset]);
         this.map.setCollision([1, 2, 6, 7, 8, 10], true, true, layer);
 
-        this.cameras.main.setZoom(1);
-        this.cameras.main.setBackgroundColor("#87ceeb");
-
         let bgCamera = this.cameras.add(0, 0, 720, 400, false, "bgCamera");
 
         bgCamera.setZoom(2);
@@ -232,6 +229,7 @@ export class MainMenu extends Phaser.Scene {
         this.get(UI_BTN_START).setCallback(this.showSelectLevelScreen, this);
         this.get(UI_BTN_RESUME).setCallback(this.resumeGame, this);
         this.get(UI_BTN_RESTART).setCallback(this.restartLevel, this);
+        this.get(UI_BTN_EXIT).setCallback(this.showStartScreen, this);
         this.get(UI_BTN_NEXT_LEVEL).setCallback(this.startNextLevel, this);
         this.get(UI_BTN_REPEAT).setCallback(this.restartLevel, this);
         this.get(UI_BTN_TOGGLE_MUSIC).setCallback(this.toggleMusic, this);
@@ -300,6 +298,8 @@ export class MainMenu extends Phaser.Scene {
     showStartScreen() {
         this.scene.setVisible(true, 'MainMenu');
         this.setLayout(START_LAYOUT);
+        this.cameras.getCamera('bgCamera').setVisible(true);
+        this.cameras.main.setBackgroundColor('#87ceeb');
         this.input.keyboard.off("keyup_ESC", this.showStartScreen, this, false);
         this.input.keyboard.on("keyup_ENTER", this.showSelectLevelScreen, this);
     }
@@ -330,6 +330,7 @@ export class MainMenu extends Phaser.Scene {
 
     startGame(event) {
         this.hideAll();
+        this.input.keyboard.off("keyup_ESC", this.showStartScreen, this);
         this.cameras.getCamera('bgCamera').setVisible(false);
         this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 0.3)');
         event.stopPropagation();
