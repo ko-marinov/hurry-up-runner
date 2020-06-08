@@ -31,6 +31,7 @@ const START_LAYOUT = 'start-layout';
 const PAUSE_LAYOUT = 'pause-layout';
 const FAIL_LAYOUT = 'fail-layout';
 const VICTORY_LAYOUT = 'victory-layout';
+const LAST_LEVEL_VICTORY_LAYOUT = 'last-level-victory-layout';
 const SELECT_LEVEL_LAYOUT = 'level-select-layout';
 
 class UiButton {
@@ -161,6 +162,8 @@ class UiToggleButton extends UiButton {
 export class MainMenu extends Phaser.Scene {
     constructor() {
         super("MainMenu");
+
+        this.levels = ['Level1', 'Level2', 'Level3'];
     }
 
     preload() {
@@ -234,15 +237,15 @@ export class MainMenu extends Phaser.Scene {
         this.get(UI_BTN_REPEAT).setCallback(this.restartLevel, this);
         this.get(UI_BTN_TOGGLE_MUSIC).setCallback(this.toggleMusic, this);
         this.get(UI_BTN_SELECT_LEVEL_1).setCallback(function (event) {
-            this.currentLevel = 'Level1';
+            this.currentLevelIndex = 0;
             this.startGame(event);
         }, this);
         this.get(UI_BTN_SELECT_LEVEL_2).setCallback(function (event) {
-            this.currentLevel = 'Level2';
+            this.currentLevelIndex = 1;
             this.startGame(event);
         }, this);
         this.get(UI_BTN_SELECT_LEVEL_3).setCallback(function (event) {
-            this.currentLevel = 'Level3';
+            this.currentLevelIndex = 2;
             this.startGame(event);
         }, this);
 
@@ -256,6 +259,7 @@ export class MainMenu extends Phaser.Scene {
         this.layouts.set(PAUSE_LAYOUT, { title: false, score: false, buttons: [UI_BTN_RESUME, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 125 });
         this.layouts.set(FAIL_LAYOUT, { title: false, score: false, buttons: [UI_BTN_RESTART, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 125 });
         this.layouts.set(VICTORY_LAYOUT, { title: false, score: true, buttons: [UI_BTN_NEXT_LEVEL, UI_BTN_REPEAT, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 160 });
+        this.layouts.set(LAST_LEVEL_VICTORY_LAYOUT, { title: false, score: true, buttons: [UI_BTN_REPEAT, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 160 });
         this.layouts.set(SELECT_LEVEL_LAYOUT, { title: false, score: false, buttons: [UI_BTN_SELECT_LEVEL_1, UI_BTN_SELECT_LEVEL_2, UI_BTN_SELECT_LEVEL_3], startY: 125 });
 
         this.scene.bringToTop('MainMenu');
@@ -318,7 +322,11 @@ export class MainMenu extends Phaser.Scene {
 
     showVictoryScreen() {
         this.scene.setVisible(true, 'MainMenu');
-        this.setLayout(VICTORY_LAYOUT);
+        if (this.currentLevelIndex < this.levels.length - 1) {
+            this.setLayout(VICTORY_LAYOUT);
+        } else {
+            this.setLayout(LAST_LEVEL_VICTORY_LAYOUT);
+        }
         this.input.keyboard.on("keyup_ENTER", this.restartLevel, this);
     }
 
@@ -335,7 +343,7 @@ export class MainMenu extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 0.3)');
         event.stopPropagation();
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.launch(this.currentLevel);
+        this.scene.launch(this.levels[this.currentLevelIndex]);
     }
 
     resumeGame(event) {
@@ -343,7 +351,7 @@ export class MainMenu extends Phaser.Scene {
         event.stopPropagation();
         this.input.keyboard.off("keyup_ESC", this.resumeGame, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get(this.currentLevel).resume();
+        this.scene.get(this.levels[this.currentLevelIndex]).resume();
     }
 
     restartLevel(event) {
@@ -351,11 +359,12 @@ export class MainMenu extends Phaser.Scene {
         event.stopPropagation();
         this.input.keyboard.off("keyup_ENTER", this.restartLevel, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get(this.currentLevel).restart();
+        this.scene.get(this.levels[this.currentLevelIndex]).restart();
     }
 
     startNextLevel(event) {
-        this.restartLevel(event);
+        this.currentLevelIndex += 1;
+        this.startGame(event);
     }
 
     toggleMusic(isOff, event) {
