@@ -2,14 +2,7 @@ import 'phaser';
 import { Player } from '../player.ts';
 import { Walker } from '../walker';
 
-import tilesetImg from '../../assets/tilesets/city-tileset.png';
-import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
-import mainCharSpritesheet from '../../assets/sprites/main_char.png';
-import npcSpritesheet1 from '../../assets/sprites/npc_1.png';
-
 var layer;
-var graphics;
-var tileset;
 
 function GetObjectByName(objectLayer, name) {
     return objectLayer.objects.find(function (elem, index, arr) {
@@ -29,25 +22,17 @@ function GetObjectsByType(objectLayer, type) {
 }
 
 class LevelBase extends Phaser.Scene {
-    constructor(levelName, levelFilename) {
+    constructor(levelName) {
         super(levelName);
         this.levelName = levelName
-        this.levelFilename = levelFilename;
         console.log('CONSTRUCTOR:', this.levelName);
     }
 
-    preload() {
-        console.log('PRELOAD:', this.levelName);
-        this.load.image('city-tileset', tilesetImg);
-        this.load.image('city-bg-tileset', bgTilesetImg);
-        this.load.tilemapTiledJSON(this.levelFilename, this.levelFilename);
-        this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('npc1', npcSpritesheet1, { frameWidth: 32, frameHeight: 32 });
-    }
+    preload() { }
 
     create() {
         console.log('CREATE:', this.levelName);
-        this.map = this.make.tilemap({ key: this.levelFilename });
+        this.map = this.make.tilemap({ key: this.levelName });
 
         let tilesets = [];
         tilesets.push(this.map.addTilesetImage('bg', 'city-bg-tileset'));
@@ -316,18 +301,18 @@ class LevelBase extends Phaser.Scene {
 
 export class Level1 extends LevelBase {
     constructor() {
-        super('Level1', '../assets/tilemaps/level_1.json');
+        super('Level1');
     }
 }
 
 export class Level2 extends LevelBase {
     constructor() {
-        super('Level2', '../assets/tilemaps/level_1.json');
+        super('Level2');
     }
 }
 
 export class Level3 extends LevelBase {
     constructor() {
-        super('Level3', '../assets/tilemaps/level_1.json');
+        super('Level3');
     }
 }
