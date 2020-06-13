@@ -49,12 +49,16 @@ class LevelBase extends Phaser.Scene {
         console.log('CREATE:', this.levelName);
         this.map = this.make.tilemap({ key: this.levelFilename });
 
-        let bg_tileset = this.map.addTilesetImage('bg', 'city-bg-tileset');
-        this.map.createStaticLayer(0, bg_tileset);
-        this.map.createStaticLayer(1, bg_tileset);
+        let tilesets = [];
+        tilesets.push(this.map.addTilesetImage('bg', 'city-bg-tileset'));
+        tilesets.push(this.map.addTilesetImage('city-tileset'));
 
-        tileset = this.map.addTilesetImage('city-tileset');
-        layer = this.map.createStaticLayer(2, tileset);
+        this.map.layers.forEach(function (layerData, index) {
+            this.map.createStaticLayer(index, tilesets);
+            if (layerData.name === 'Level') {
+                layer = layerData.tilemapLayer;
+            }
+        }, this);
         this.map.setCollision([1, 2, 6, 7, 8, 10], true, true, layer);
 
         this.positionsLayer = this.map.getObjectLayer('Positions');
