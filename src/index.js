@@ -17,10 +17,7 @@ var config = {
         }
     },
     scene: [
-        MainMenu,
-        Level1,
-        Level2,
-        Level3
+        MainMenu
     ],
     scale: {
         mode: Phaser.Scale.FIT,

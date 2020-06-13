@@ -13,6 +13,7 @@ import scoreImg from '../../assets/images/total_score.png';
 import tilesetImg from '../../assets/tilesets/city-tileset.png';
 import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
 import mainCharSpritesheet from '../../assets/sprites/main_char.png';
+import { Level1, Level2, Level3 } from './level1';
 
 const UI_TITLE_IMG = 'title';
 const UI_SCORE_IMG = 'score';
@@ -163,7 +164,17 @@ export class MainMenu extends Phaser.Scene {
     constructor() {
         super("MainMenu");
 
-        this.levels = ['Level1', 'Level2', 'Level3'];
+        this.levels = [
+            {
+                name: 'Level1', class: Level1
+            },
+            {
+                name: 'Level2', class: Level2
+            },
+            {
+                name: 'Level3', class: Level3
+            }
+        ];
     }
 
     preload() {
@@ -343,7 +354,10 @@ export class MainMenu extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 0.3)');
         event.stopPropagation();
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.launch(this.levels[this.currentLevelIndex]);
+        let sceneName = this.levels[this.currentLevelIndex].name;
+        let sceneClass = this.levels[this.currentLevelIndex].class;
+        this.scene.add(sceneName, sceneClass, true);
+        this.scene.bringToTop('MainMenu')
     }
 
     resumeGame(event) {
@@ -351,7 +365,7 @@ export class MainMenu extends Phaser.Scene {
         event.stopPropagation();
         this.input.keyboard.off("keyup_ESC", this.resumeGame, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get(this.levels[this.currentLevelIndex]).resume();
+        this.scene.get(this.levels[this.currentLevelIndex].name).resumeGame();
     }
 
     restartLevel(event) {
@@ -359,12 +373,13 @@ export class MainMenu extends Phaser.Scene {
         event.stopPropagation();
         this.input.keyboard.off("keyup_ENTER", this.restartLevel, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get(this.levels[this.currentLevelIndex]).restart();
+        this.scene.get(this.levels[this.currentLevelIndex].name).restartGame();
     }
 
     startNextLevel(event) {
+        this.scene.remove(this.levels[this.currentLevelIndex].name);
         this.currentLevelIndex += 1;
-        this.startGame(event);
+        this.time.delayedCall(1, this.startGame, [event], this);
     }
 
     toggleMusic(isOff, event) {

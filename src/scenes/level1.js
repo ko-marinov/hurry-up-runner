@@ -33,18 +33,21 @@ class LevelBase extends Phaser.Scene {
         super(levelName);
         this.levelName = levelName
         this.levelFilename = levelFilename;
+        console.log('CONSTRUCTOR:', this.levelName);
     }
 
     preload() {
+        console.log('PRELOAD:', this.levelName);
         this.load.image('city-tileset', tilesetImg);
         this.load.image('city-bg-tileset', bgTilesetImg);
-        this.load.tilemapTiledJSON('map', this.levelFilename);
+        this.load.tilemapTiledJSON(this.levelFilename, this.levelFilename);
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('npc1', npcSpritesheet1, { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
-        this.map = this.make.tilemap({ key: 'map' });
+        console.log('CREATE:', this.levelName);
+        this.map = this.make.tilemap({ key: this.levelFilename });
 
         let bg_tileset = this.map.addTilesetImage('bg', 'city-bg-tileset');
         this.map.createStaticLayer(0, bg_tileset);
@@ -66,7 +69,8 @@ class LevelBase extends Phaser.Scene {
 
         this.physics.add.collider(this.player, layer);
 
-        this.input.keyboard.on("keyup_R", this.restart, this);
+        this.input.keyboard.on("keyup_R", this.restartGame, this);
+        this.input.keyboard.on("keyup_ESC", this.pauseGame, this);
 
         this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 65);
         this.cameras.main.setZoom(2);
@@ -94,7 +98,7 @@ class LevelBase extends Phaser.Scene {
     }
 
     preStart() {
-        this.time.delayedCall(1000, this.start, null, this);
+        this.time.delayedCall(1000, this.startGame, null, this);
     }
 
     getWalkers() {
@@ -120,8 +124,7 @@ class LevelBase extends Phaser.Scene {
         walker.onBumped();
     }
 
-    start() {
-        this.input.keyboard.on("keyup_ESC", this.pause, this);
+    startGame() {
         this.initBananas();
         this.initFinish();
 
@@ -157,13 +160,13 @@ class LevelBase extends Phaser.Scene {
         this.textTime.setText("TIME: " + timeString + " s");
     }
 
-    restart() {
+    restartGame() {
         this.scene.setActive(true, this.levelName);
         this.bananas.clear(true, true);
         this.physics.world.removeCollider(this.finishOverlapCollider);
 
         this.player.setPosition(this.playerStartPos.x, this.playerStartPos.y);
-        this.start();
+        this.startGame();
     }
 
     isLevelComplete() {
@@ -234,13 +237,13 @@ class LevelBase extends Phaser.Scene {
         });
     }
 
-    pause(event) {
+    pauseGame(event) {
         event.stopPropagation();
         this.scene.setActive(false, this.levelName);
         this.scene.get('MainMenu').showPauseScreen();
     }
 
-    resume() {
+    resumeGame() {
         this.scene.setActive(true, this.levelName);
     }
 
