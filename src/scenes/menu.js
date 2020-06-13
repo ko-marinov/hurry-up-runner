@@ -1,4 +1,5 @@
 import 'phaser';
+import { Player } from '../player.ts';
 
 import btnStartImg from '../../assets/images/button_start.png';
 import btnExitImg from '../../assets/images/button_exit.png';
@@ -9,6 +10,10 @@ import btnResumeImg from '../../assets/images/button_resume.png';
 import btnVolumeImg from '../../assets/images/button-volume.png';
 import titleImg from '../../assets/images/game_name.png';
 import scoreImg from '../../assets/images/total_score.png';
+import tilesetImg from '../../assets/tilesets/city-tileset.png';
+import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
+import mainCharSpritesheet from '../../assets/sprites/main_char.png';
+import { Level1, Level2, Level3 } from './level1';
 
 const UI_TITLE_IMG = 'title';
 const UI_SCORE_IMG = 'score';
@@ -19,11 +24,16 @@ const UI_BTN_NEXT_LEVEL = 'btnNextLevel';
 const UI_BTN_REPEAT = 'btnRepeat';
 const UI_BTN_EXIT = 'btnExit';
 const UI_BTN_TOGGLE_MUSIC = 'btnToggleMusic';
+const UI_BTN_SELECT_LEVEL_1 = 'btnSelectLevel1';
+const UI_BTN_SELECT_LEVEL_2 = 'btnSelectLevel2';
+const UI_BTN_SELECT_LEVEL_3 = 'btnSelectLevel3';
 
 const START_LAYOUT = 'start-layout';
 const PAUSE_LAYOUT = 'pause-layout';
 const FAIL_LAYOUT = 'fail-layout';
 const VICTORY_LAYOUT = 'victory-layout';
+const LAST_LEVEL_VICTORY_LAYOUT = 'last-level-victory-layout';
+const SELECT_LEVEL_LAYOUT = 'level-select-layout';
 
 class UiButton {
     constructor(scene, x, y, texture, frame) {
@@ -153,6 +163,18 @@ class UiToggleButton extends UiButton {
 export class MainMenu extends Phaser.Scene {
     constructor() {
         super("MainMenu");
+
+        this.levels = [
+            {
+                name: 'Level1', class: Level1
+            },
+            {
+                name: 'Level2', class: Level2
+            },
+            {
+                name: 'Level3', class: Level3
+            }
+        ];
     }
 
     preload() {
@@ -166,11 +188,40 @@ export class MainMenu extends Phaser.Scene {
         this.load.spritesheet('btn-volume', btnVolumeImg, { frameWidth: 40, frameHeight: 40 });
         this.load.spritesheet('ui-score-image', scoreImg, { frameWidth: 252, frameHeight: 83 });
         this.load.audio('music-loop', '../../assets/sounds/music_loop.mp3');
+
+        this.load.image('city-tileset', tilesetImg);
+        this.load.image('city-bg-tileset', bgTilesetImg);
+        this.load.tilemapTiledJSON('menu-map', '../assets/tilemaps/menu.json');
+        this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
-        this.scene.launch('Level1');
-        this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 0.3)');
+        this.map = this.make.tilemap({ key: 'menu-map' });
+
+        var tileset = this.map.addTilesetImage('city-tileset');
+        let bg_tileset = this.map.addTilesetImage('bg', 'city-bg-tileset');
+        var layer = this.map.createStaticLayer(0, [tileset, bg_tileset]);
+        this.map.setCollision([1, 2, 6, 7, 8, 10], true, true, layer);
+
+        let bgCamera = this.cameras.add(0, 0, 720, 400, false, "bgCamera");
+
+        bgCamera.setZoom(2);
+        bgCamera.setScroll(-24, 385);
+
+        let positionsLayer = this.map.getObjectLayer('Positions');
+        this.playerStartPos = positionsLayer.objects.find(function (elem, index, arr) {
+            return elem['name'] == 'PlayerStartPos';
+        });
+        this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y)
+        this.player.setOrigin(0.5, 1);
+        this.anims.create({
+            key: 'idle',
+            frames: this.anims.generateFrameNumbers('char', { start: 0, end: 1 }),
+            frameRate: 2,
+            repeat: -1
+        });
+        this.player.play('idle');
+        this.physics.add.collider(this.player, layer);
 
         let center_x = this.game.config.width / 2;
 
@@ -185,13 +236,29 @@ export class MainMenu extends Phaser.Scene {
         this.uiElements.set(UI_BTN_NEXT_LEVEL, new UiButtonWithText(this, 0, 0, 'btn-next-level', 0, 'Next Level'));
         this.uiElements.set(UI_BTN_REPEAT, new UiButtonWithText(this, 0, 0, 'btn-repeat', 0, 'Repeat'));
         this.uiElements.set(UI_BTN_TOGGLE_MUSIC, new UiToggleButton(this, 0, 0, 'btn-volume', 0, 2));
+        this.uiElements.set(UI_BTN_SELECT_LEVEL_1, new UiButtonWithText(this, 0, 0, 'btn-start', 0, 'Level 1'));
+        this.uiElements.set(UI_BTN_SELECT_LEVEL_2, new UiButtonWithText(this, 0, 0, 'btn-start', 0, 'Level 2'));
+        this.uiElements.set(UI_BTN_SELECT_LEVEL_3, new UiButtonWithText(this, 0, 0, 'btn-start', 0, 'Level 3'));
 
-        this.get(UI_BTN_START).setCallback(this.startGame, this);
+        this.get(UI_BTN_START).setCallback(this.showSelectLevelScreen, this);
         this.get(UI_BTN_RESUME).setCallback(this.resumeGame, this);
         this.get(UI_BTN_RESTART).setCallback(this.restartLevel, this);
+        this.get(UI_BTN_EXIT).setCallback(this.showStartScreen, this);
         this.get(UI_BTN_NEXT_LEVEL).setCallback(this.startNextLevel, this);
         this.get(UI_BTN_REPEAT).setCallback(this.restartLevel, this);
         this.get(UI_BTN_TOGGLE_MUSIC).setCallback(this.toggleMusic, this);
+        this.get(UI_BTN_SELECT_LEVEL_1).setCallback(function (event) {
+            this.currentLevelIndex = 0;
+            this.startGame(event);
+        }, this);
+        this.get(UI_BTN_SELECT_LEVEL_2).setCallback(function (event) {
+            this.currentLevelIndex = 1;
+            this.startGame(event);
+        }, this);
+        this.get(UI_BTN_SELECT_LEVEL_3).setCallback(function (event) {
+            this.currentLevelIndex = 2;
+            this.startGame(event);
+        }, this);
 
         this.input.keyboard.on("keyup_M", function () {
             this.get(UI_BTN_TOGGLE_MUSIC).press();
@@ -203,6 +270,8 @@ export class MainMenu extends Phaser.Scene {
         this.layouts.set(PAUSE_LAYOUT, { title: false, score: false, buttons: [UI_BTN_RESUME, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 125 });
         this.layouts.set(FAIL_LAYOUT, { title: false, score: false, buttons: [UI_BTN_RESTART, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 125 });
         this.layouts.set(VICTORY_LAYOUT, { title: false, score: true, buttons: [UI_BTN_NEXT_LEVEL, UI_BTN_REPEAT, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 160 });
+        this.layouts.set(LAST_LEVEL_VICTORY_LAYOUT, { title: false, score: true, buttons: [UI_BTN_REPEAT, UI_BTN_EXIT, UI_BTN_TOGGLE_MUSIC], startY: 160 });
+        this.layouts.set(SELECT_LEVEL_LAYOUT, { title: false, score: false, buttons: [UI_BTN_SELECT_LEVEL_1, UI_BTN_SELECT_LEVEL_2, UI_BTN_SELECT_LEVEL_3], startY: 125 });
 
         this.scene.bringToTop('MainMenu');
 
@@ -217,6 +286,7 @@ export class MainMenu extends Phaser.Scene {
     }
 
     setLayout(layoutName) {
+        this.hideAll();
         let layout = this.layouts.get(layoutName);
         if (layout.title) {
             this.get(UI_TITLE_IMG).setVisible(true);
@@ -234,10 +304,19 @@ export class MainMenu extends Phaser.Scene {
         }, this);
     }
 
+    showSelectLevelScreen() {
+        this.setLayout(SELECT_LEVEL_LAYOUT);
+        this.input.keyboard.off("keyup_ENTER", this.showSelectLevelScreen, this, false);
+        this.input.keyboard.on("keyup_ESC", this.showStartScreen, this);
+    }
+
     showStartScreen() {
         this.scene.setVisible(true, 'MainMenu');
         this.setLayout(START_LAYOUT);
-        this.input.keyboard.on("keyup_ENTER", this.startGame, this);
+        this.cameras.getCamera('bgCamera').setVisible(true);
+        this.cameras.main.setBackgroundColor('#87ceeb');
+        this.input.keyboard.off("keyup_ESC", this.showStartScreen, this, false);
+        this.input.keyboard.on("keyup_ENTER", this.showSelectLevelScreen, this);
     }
 
     showPauseScreen() {
@@ -254,7 +333,11 @@ export class MainMenu extends Phaser.Scene {
 
     showVictoryScreen() {
         this.scene.setVisible(true, 'MainMenu');
-        this.setLayout(VICTORY_LAYOUT);
+        if (this.currentLevelIndex < this.levels.length - 1) {
+            this.setLayout(VICTORY_LAYOUT);
+        } else {
+            this.setLayout(LAST_LEVEL_VICTORY_LAYOUT);
+        }
         this.input.keyboard.on("keyup_ENTER", this.restartLevel, this);
     }
 
@@ -266,10 +349,15 @@ export class MainMenu extends Phaser.Scene {
 
     startGame(event) {
         this.hideAll();
+        this.input.keyboard.off("keyup_ESC", this.showStartScreen, this);
+        this.cameras.getCamera('bgCamera').setVisible(false);
+        this.cameras.main.setBackgroundColor('rgba(0, 0, 0, 0.3)');
         event.stopPropagation();
-        this.input.keyboard.off("keyup_ENTER", this.startGame, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get('Level1').start();
+        let sceneName = this.levels[this.currentLevelIndex].name;
+        let sceneClass = this.levels[this.currentLevelIndex].class;
+        this.scene.add(sceneName, sceneClass, true);
+        this.scene.bringToTop('MainMenu')
     }
 
     resumeGame(event) {
@@ -277,7 +365,7 @@ export class MainMenu extends Phaser.Scene {
         event.stopPropagation();
         this.input.keyboard.off("keyup_ESC", this.resumeGame, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get('Level1').resume();
+        this.scene.get(this.levels[this.currentLevelIndex].name).resumeGame();
     }
 
     restartLevel(event) {
@@ -285,11 +373,13 @@ export class MainMenu extends Phaser.Scene {
         event.stopPropagation();
         this.input.keyboard.off("keyup_ENTER", this.restartLevel, this, false);
         this.scene.setVisible(false, 'MainMenu');
-        this.scene.get('Level1').restart();
+        this.scene.get(this.levels[this.currentLevelIndex].name).restartGame();
     }
 
     startNextLevel(event) {
-        this.restartLevel(event);
+        this.scene.remove(this.levels[this.currentLevelIndex].name);
+        this.currentLevelIndex += 1;
+        this.time.delayedCall(1, this.startGame, [event], this);
     }
 
     toggleMusic(isOff, event) {

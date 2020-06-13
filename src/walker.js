@@ -2,7 +2,7 @@ import 'phaser';
 
 export class Walker extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, config) {
-        super(scene, config.fromX, config.fromY, 'char');
+        super(scene, config.fromX, config.fromY, 'npc1');
 
         scene.sys.displayList.add(this);
         scene.sys.updateList.add(this);
@@ -17,8 +17,6 @@ export class Walker extends Phaser.Physics.Arcade.Sprite {
         this.toX = config.toX;
         this.initialFromX = config.fromX;
         this.initialToX = config.toX;
-
-        this.walk();
     }
 
     walk() {

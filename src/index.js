@@ -1,6 +1,6 @@
 import 'phaser';
 import { MainMenu } from './scenes/menu';
-import { Level1 } from './scenes/level1';
+import { Level1, Level2, Level3 } from './scenes/level1';
 
 var config = {
     type: Phaser.AUTO,
@@ -17,8 +17,7 @@ var config = {
         }
     },
     scene: [
-        MainMenu,
-        Level1
+        MainMenu
     ],
     scale: {
         mode: Phaser.Scale.FIT,
