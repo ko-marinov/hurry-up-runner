@@ -25,7 +25,17 @@ import titleImg from '../../assets/images/game_name.png';
 import scoreImg from '../../assets/images/total_score.png';
 
 export class Preloader extends Phaser.Scene {
+    constructor() {
+        super('Preloader');
+    }
+
     preload() {
+        let loadingText = this.add.text(0, 0, 'LOADING...', { fontFamily: 'vt323', fontSize: 32 });
+        loadingText.setPosition(
+            this.game.config.width / 2 - loadingText.width / 2,
+            this.game.config.height / 2 - loadingText.height / 2
+        );
+
         this.load.image('city-tileset', tilesetImg);
         this.load.image('city-bg-tileset', bgTilesetImg);
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });

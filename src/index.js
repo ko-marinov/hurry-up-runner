@@ -1,4 +1,5 @@
 import 'phaser';
+import { Boot } from './scenes/boot';
 import { Preloader } from './scenes/preloader';
 import { MainMenu } from './scenes/menu';
 
@@ -17,6 +18,7 @@ var config = {
         }
     },
     scene: [
+        Boot,
         Preloader,
         MainMenu
     ],
