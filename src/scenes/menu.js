@@ -1,18 +1,5 @@
 import 'phaser';
 import { Player } from '../player.ts';
-
-import btnStartImg from '../../assets/images/button_start.png';
-import btnExitImg from '../../assets/images/button_exit.png';
-import btnRestartImg from '../../assets/images/button_restart.png';
-import btnNextLevelImg from '../../assets/images/button_next_level.png';
-import btnRepeatImg from '../../assets/images/button_repeat.png';
-import btnResumeImg from '../../assets/images/button_resume.png';
-import btnVolumeImg from '../../assets/images/button-volume.png';
-import titleImg from '../../assets/images/game_name.png';
-import scoreImg from '../../assets/images/total_score.png';
-import tilesetImg from '../../assets/tilesets/city-tileset.png';
-import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
-import mainCharSpritesheet from '../../assets/sprites/main_char.png';
 import { Level1, Level2, Level3 } from './level1';
 
 const UI_TITLE_IMG = 'title';
@@ -177,23 +164,7 @@ export class MainMenu extends Phaser.Scene {
         ];
     }
 
-    preload() {
-        this.load.image('game-title', titleImg);
-        this.load.spritesheet('btn-start', btnStartImg, { frameWidth: 186, frameHeight: 40 });
-        this.load.spritesheet('btn-exit', btnExitImg, { frameWidth: 186, frameHeight: 40 });
-        this.load.spritesheet('btn-restart', btnRestartImg, { frameWidth: 186, frameHeight: 40 });
-        this.load.spritesheet('btn-next-level', btnNextLevelImg, { frameWidth: 186, frameHeight: 40 });
-        this.load.spritesheet('btn-repeat', btnRepeatImg, { frameWidth: 186, frameHeight: 40 });
-        this.load.spritesheet('btn-resume', btnResumeImg, { frameWidth: 186, frameHeight: 40 });
-        this.load.spritesheet('btn-volume', btnVolumeImg, { frameWidth: 40, frameHeight: 40 });
-        this.load.spritesheet('ui-score-image', scoreImg, { frameWidth: 252, frameHeight: 83 });
-        this.load.audio('music-loop', '../../assets/sounds/music_loop.mp3');
-
-        this.load.image('city-tileset', tilesetImg);
-        this.load.image('city-bg-tileset', bgTilesetImg);
-        this.load.tilemapTiledJSON('menu-map', '../assets/tilemaps/menu.json');
-        this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
-    }
+    preload() { }
 
     create() {
         this.map = this.make.tilemap({ key: 'menu-map' });

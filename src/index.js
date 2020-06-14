@@ -1,6 +1,7 @@
 import 'phaser';
+import { Boot } from './scenes/boot';
+import { Preloader } from './scenes/preloader';
 import { MainMenu } from './scenes/menu';
-import { Level1, Level2, Level3 } from './scenes/level1';
 
 var config = {
     type: Phaser.AUTO,
@@ -17,6 +18,8 @@ var config = {
         }
     },
     scene: [
+        Boot,
+        Preloader,
         MainMenu
     ],
     scale: {
