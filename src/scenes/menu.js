@@ -185,12 +185,6 @@ export class MainMenu extends Phaser.Scene {
         });
         this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y)
         this.player.setOrigin(0.5, 1);
-        this.anims.create({
-            key: 'idle',
-            frames: this.anims.generateFrameNumbers('char', { start: 0, end: 1 }),
-            frameRate: 2,
-            repeat: -1
-        });
         this.player.play('idle');
         this.physics.add.collider(this.player, layer);
 
@@ -245,6 +239,8 @@ export class MainMenu extends Phaser.Scene {
         this.layouts.set(SELECT_LEVEL_LAYOUT, { title: false, score: false, buttons: [UI_BTN_SELECT_LEVEL_1, UI_BTN_SELECT_LEVEL_2, UI_BTN_SELECT_LEVEL_3], startY: 125 });
 
         this.scene.bringToTop('MainMenu');
+
+        this.spawnBirdTask = this.time.delayedCall(2000, this.spawnBird, null, this);
 
         this.hideAll();
         this.showStartScreen();
@@ -328,7 +324,7 @@ export class MainMenu extends Phaser.Scene {
         let sceneName = this.levels[this.currentLevelIndex].name;
         let sceneClass = this.levels[this.currentLevelIndex].class;
         this.scene.add(sceneName, sceneClass, true);
-        this.scene.bringToTop('MainMenu')
+        this.scene.bringToTop('MainMenu');
     }
 
     resumeGame(event) {
@@ -356,5 +352,21 @@ export class MainMenu extends Phaser.Scene {
     toggleMusic(isOff, event) {
         event.stopPropagation();
         this.sound.setMute(isOff);
+    }
+
+    spawnBird() {
+        let bird = this.add.sprite(550, 627, 'bird');
+        bird.play('birdFly');
+        this.tween = this.tweens.add({
+            targets: bird,
+            duration: 5000,
+            x: 100,
+            onComplete: function (event, targets) {
+                targets[0].destroy();
+                let delay = 1000 + Math.floor(Math.random() * Math.floor(4000));
+                this.spawnBirdTask = this.time.delayedCall(delay, this.spawnBird, null, this);
+            },
+            onCompleteScope: this
+        });
     }
 }
