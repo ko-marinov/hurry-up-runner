@@ -95,6 +95,9 @@ class LevelBase extends Phaser.Scene {
     }
 
     isRunIntoWalker(player, walker) {
+        if (this.levelComplete) {
+            return false;
+        }
         if (player.isDodging()) {
             return false;
         }
