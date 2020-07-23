@@ -203,6 +203,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.bump();
     }
 
+    onRunIntoBird() {
+        if (this.state === PlayerState.STUMBLED) { return; }
+        this.bump();
+    }
+
     isDodging() {
         return this.state === PlayerState.DODGE;
     }

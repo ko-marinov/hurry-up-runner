@@ -428,6 +428,30 @@
                  "width":0,
                  "x":1353,
                  "y":448
+                }, 
+                {
+                 "height":0,
+                 "id":18,
+                 "name":"BirdTrigger_2",
+                 "point":true,
+                 "rotation":0,
+                 "type":"BirdTrigger",
+                 "visible":true,
+                 "width":0,
+                 "x":1024,
+                 "y":448
+                }, 
+                {
+                 "height":0,
+                 "id":17,
+                 "name":"BirdTrigger_1",
+                 "point":true,
+                 "rotation":0,
+                 "type":"BirdTrigger",
+                 "visible":true,
+                 "width":0,
+                 "x":432,
+                 "y":448
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -436,7 +460,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":17,
+ "nextobjectid":19,
  "orientation":"orthogonal",
  "properties":[
         {

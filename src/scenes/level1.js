@@ -1,6 +1,7 @@
 import 'phaser';
 import { Player } from '../player.ts';
 import { Walker } from '../walker';
+import { Bird } from '../bird';
 
 var layer;
 
@@ -80,6 +81,7 @@ class LevelBase extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
 
         this.initWalkers();
+        this.initBirdTriggers();
 
         this.preStart();
     }
@@ -120,6 +122,11 @@ class LevelBase extends Phaser.Scene {
             walker.walkFromStart();
         });
 
+        this.birdTriggers.forEach(trig => {
+            trig.enabled = true;
+            trig.bird.reset();
+        });
+
         this.levelComplete = false;
         this.timeRemaining = this.levelData.get('Time Limit');
         this.isLevelStarted = true;
@@ -136,6 +143,7 @@ class LevelBase extends Phaser.Scene {
         else {
             this.player.updateVelocity();
             this.updateTimeFromStart(delta);
+            this.tryLaunchBird();
         }
     }
 
@@ -221,6 +229,35 @@ class LevelBase extends Phaser.Scene {
             this.physics.add.overlap(this.player, walker, this.onRunIntoWalker, this.isRunIntoWalker, this);
 
             this.walkers.push(walker);
+        });
+    }
+
+    initBirdTriggers() {
+        this.birdTriggers = [];
+
+        let triggers = GetObjectsByType(this.positionsLayer, 'BirdTrigger');
+        triggers.forEach(trig => {
+            console.log(trig);
+            let bird = new Bird(this, { x: trig.x + 250, y: trig.y - 25 });
+
+            this.physics.add.overlap(this.player, bird, this.onRunIntoBird, null, this);
+
+            this.birdTriggers.push({ x: trig.x, enabled: true, bird: bird });
+        });
+    }
+
+    onRunIntoBird(player, bird) {
+        console.log("Run into bird");
+        player.onRunIntoBird();
+        bird.onBumped();
+    }
+
+    tryLaunchBird() {
+        this.birdTriggers.forEach(trig => {
+            if (this.player.x > trig.x && trig.enabled) {
+                trig.bird.startFly();
+                trig.enabled = false;
+            }
         });
     }
 
