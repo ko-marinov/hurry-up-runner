@@ -75,6 +75,12 @@ class LevelBase extends Phaser.Scene {
         }, this);
 
         this.timeRemaining = this.levelData.get('Time Limit');
+        this.starsTimeConditions = [
+            this.levelData.get('1stars'),
+            this.levelData.get('2stars'),
+            this.levelData.get('3stars')
+        ]
+        console.log("STARS CONDS", this.starsTimeConditions);
         this.textTime = this.add.text(590, 1010, '');
 
         this.bananas = this.physics.add.staticGroup();
@@ -211,7 +217,19 @@ class LevelBase extends Phaser.Scene {
         player.onEnterFinishTile();
         this.physics.world.removeCollider(this.finishOverlapCollider);
         this.levelComplete = true;
-        this.scene.get('MainMenu').showVictoryScreen();
+        let stars = this.countStars();
+        this.scene.get('MainMenu').showVictoryScreen(stars);
+    }
+
+    countStars() {
+        let time = this.levelData.get('Time Limit') - this.timeRemaining;
+        let stars = 0;
+        this.starsTimeConditions.forEach(cond => {
+            if (time <= cond) {
+                stars++;
+            }
+        });
+        return stars;
     }
 
     initWalkers() {

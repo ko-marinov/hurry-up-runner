@@ -298,13 +298,14 @@ export class MainMenu extends Phaser.Scene {
         this.input.keyboard.on("keyup_ENTER", this.restartLevel, this);
     }
 
-    showVictoryScreen() {
+    showVictoryScreen(stars) {
         this.scene.setVisible(true, 'MainMenu');
         if (this.currentLevelIndex < this.levels.length - 1) {
             this.setLayout(VICTORY_LAYOUT);
         } else {
             this.setLayout(LAST_LEVEL_VICTORY_LAYOUT);
         }
+        this.uiElements.get(UI_SCORE_IMG).play('scoreStars' + stars);
         this.input.keyboard.on("keyup_ENTER", this.restartLevel, this);
     }
 
