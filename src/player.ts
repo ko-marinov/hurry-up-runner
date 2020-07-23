@@ -172,15 +172,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     onEnterFinishTile() {
+        // deltaX = vt + (1/2)at^2 = const
+        // v0 = v, v1 = 0 => a = v/t
+        // => t = (2/3)deltaX/v
+        let deltaX = 60;
+        let duration = ((2 * deltaX / 3) * 1000) / this.velocityX;
         this.scene.tweens.add({
-            targets: this,
-            duration: 700,
-            velocityX: 0,
-            onComplete: function (tween, targets) {
-                let player = targets[0];
+            targets: this.body.velocity,
+            duration: duration,
+            x: 0,
+            onComplete: function (tween, targets, player) {
                 player.cheer();
-                player.scene.levelComplete = true;
-            }
+            },
+            onCompleteParams: [this]
         });
     }
 

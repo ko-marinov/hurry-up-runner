@@ -206,6 +206,7 @@ class LevelBase extends Phaser.Scene {
     onEnterFinish(player, finish) {
         player.onEnterFinishTile();
         this.physics.world.removeCollider(this.finishOverlapCollider);
+        this.levelComplete = true;
         this.scene.get('MainMenu').showVictoryScreen();
     }
 
