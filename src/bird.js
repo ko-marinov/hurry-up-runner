@@ -42,14 +42,27 @@ export class Bird extends Phaser.Physics.Arcade.Sprite {
         this.isBumped = true;
         this.tween.stop();
         this.play('birdFall');
-        let newX = this.x + 50;
-        let newY = this.y + 50;
+        let newX = this.x + 70;
+        let newY = this.y + 100;
         this.scene.tweens.add({
             targets: this,
-            duration: 1000,
-            x: newX,
-            y: newY,
-            ease: "Power1"
+            props: {
+                x: {
+                    value: newX,
+                    duration: 1500,
+                    ease: 'Power1'
+                },
+                y: {
+                    value: newY,
+                    duration: 1000,
+                    ease: 'Quad.easeIn'
+                },
+                angle: {
+                    value: 360,
+                    duration: 250,
+                    repeat: 8
+                }
+            }
         });
     }
 }
