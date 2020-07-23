@@ -20,7 +20,11 @@ export class Bird extends Phaser.Physics.Arcade.Sprite {
 
     reset() {
         this.isBumped = false;
+        this.angle = 0;
         this.setPosition(this.startX, this.startY);
+        if (this.tween != undefined) {
+            this.tween.stop();
+        }
     }
 
     startFly() {
@@ -44,7 +48,7 @@ export class Bird extends Phaser.Physics.Arcade.Sprite {
         this.play('birdFall');
         let newX = this.x + 70;
         let newY = this.y + 100;
-        this.scene.tweens.add({
+        this.tween = this.scene.tweens.add({
             targets: this,
             props: {
                 x: {
