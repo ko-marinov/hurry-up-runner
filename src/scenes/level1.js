@@ -1,6 +1,7 @@
 import 'phaser';
 import { Player } from '../player.ts';
 import { Walker } from '../walker';
+import { Bird } from '../bird';
 
 var layer;
 
@@ -54,8 +55,6 @@ class LevelBase extends Phaser.Scene {
 
         this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y).setOrigin(0.5, 1);
 
-        this.registerAnimations();
-
         this.physics.add.collider(this.player, layer);
 
         this.input.keyboard.on("keyup_R", this.restartGame, this);
@@ -82,6 +81,7 @@ class LevelBase extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
 
         this.initWalkers();
+        this.initBirdTriggers();
 
         this.preStart();
     }
@@ -122,6 +122,11 @@ class LevelBase extends Phaser.Scene {
             walker.walkFromStart();
         });
 
+        this.birdTriggers.forEach(trig => {
+            trig.enabled = true;
+            trig.bird.reset();
+        });
+
         this.levelComplete = false;
         this.timeRemaining = this.levelData.get('Time Limit');
         this.isLevelStarted = true;
@@ -138,6 +143,7 @@ class LevelBase extends Phaser.Scene {
         else {
             this.player.updateVelocity();
             this.updateTimeFromStart(delta);
+            this.tryLaunchBird();
         }
     }
 
@@ -226,6 +232,35 @@ class LevelBase extends Phaser.Scene {
         });
     }
 
+    initBirdTriggers() {
+        this.birdTriggers = [];
+
+        let triggers = GetObjectsByType(this.positionsLayer, 'BirdTrigger');
+        triggers.forEach(trig => {
+            console.log(trig);
+            let bird = new Bird(this, { x: trig.x + 250, y: trig.y - 25 });
+
+            this.physics.add.overlap(this.player, bird, this.onRunIntoBird, null, this);
+
+            this.birdTriggers.push({ x: trig.x, enabled: true, bird: bird });
+        });
+    }
+
+    onRunIntoBird(player, bird) {
+        console.log("Run into bird");
+        player.onRunIntoBird();
+        bird.onBumped();
+    }
+
+    tryLaunchBird() {
+        this.birdTriggers.forEach(trig => {
+            if (this.player.x > trig.x && trig.enabled) {
+                trig.bird.startFly();
+                trig.enabled = false;
+            }
+        });
+    }
+
     pauseGame(event) {
         event.stopPropagation();
         this.scene.setActive(false, this.levelName);
@@ -234,67 +269,6 @@ class LevelBase extends Phaser.Scene {
 
     resumeGame() {
         this.scene.setActive(true, this.levelName);
-    }
-
-    registerAnimations() {
-        this.anims.create({
-            key: 'run',
-            frames: this.anims.generateFrameNumbers("char", { start: 14, end: 28 }),
-            frameRate: 28,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'jump',
-            frames: this.anims.generateFrameNumbers('char', { start: 28, end: 34 }),
-            frameRate: 12,
-        });
-        this.anims.create({
-            key: 'dash',
-            frames: [{ key: 'char', frame: 30 }],
-            frameRate: 2.5,
-        });
-        this.anims.create({
-            key: 'cheers',
-            frames: this.anims.generateFrameNumbers('char', { start: 0, end: 1 }),
-            frameRate: 4,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'stumble',
-            frames: this.anims.generateFrameNumbers('char', { start: 42, end: 46 }),
-            frameRate: 20,
-        });
-        this.anims.create({
-            key: 'bump',
-            frames: this.anims.generateFrameNumbers('char', { start: 56, end: 60 }),
-            frameRate: 20,
-        });
-        this.anims.create({
-            key: 'fall',
-            frames: this.anims.generateFrameNumbers('char', { start: 70, end: 74 }),
-            frameRate: 10,
-        });
-        this.anims.create({
-            key: 'dodge',
-            frames: this.anims.generateFrameNumbers('char', { start: 84, end: 93 }),
-            frameRate: 30,
-        });
-        this.anims.create({
-            key: 'npc1Walk',
-            frames: this.anims.generateFrameNumbers('npc1', { start: 5, end: 8 }),
-            frameRate: 8,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'npc1Stumble',
-            frames: this.anims.generateFrameNumbers('npc1', { start: 10, end: 14 }),
-            frameRate: 12,
-        });
-        this.anims.create({
-            key: 'npc1Bump',
-            frames: this.anims.generateFrameNumbers('npc1', { start: 15, end: 19 }),
-            frameRate: 12,
-        });
     }
 }
 
