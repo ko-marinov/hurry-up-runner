@@ -208,7 +208,7 @@ export class MainMenu extends Phaser.Scene {
         this.get(UI_BTN_START).setCallback(this.showSelectLevelScreen, this);
         this.get(UI_BTN_RESUME).setCallback(this.resumeGame, this);
         this.get(UI_BTN_RESTART).setCallback(this.restartLevel, this);
-        this.get(UI_BTN_EXIT).setCallback(this.showStartScreen, this);
+        this.get(UI_BTN_EXIT).setCallback(this.exitFromLevel, this);
         this.get(UI_BTN_NEXT_LEVEL).setCallback(this.startNextLevel, this);
         this.get(UI_BTN_REPEAT).setCallback(this.restartLevel, this);
         this.get(UI_BTN_TOGGLE_MUSIC).setCallback(this.toggleMusic, this);
@@ -347,6 +347,12 @@ export class MainMenu extends Phaser.Scene {
         this.scene.remove(this.levels[this.currentLevelIndex].name);
         this.currentLevelIndex += 1;
         this.time.delayedCall(1, this.startGame, [event], this);
+    }
+
+    exitFromLevel() {
+        let sceneName = this.levels[this.currentLevelIndex].name;
+        this.scene.remove(sceneName);
+        this.showStartScreen();
     }
 
     toggleMusic(isOff, event) {
