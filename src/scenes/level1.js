@@ -202,7 +202,8 @@ class LevelBase extends Phaser.Scene {
             }
         }, this);
 
-        let finishImage = this.physics.add.staticImage(layer.x + finishTile.pixelX, layer.y + finishTile.pixelY);
+        let finishImage = this.physics.add.staticImage(layer.x + finishTile.pixelX + 8, layer.y + finishTile.pixelY + 8);
+        finishImage.setSize(16, 16);
         this.finishOverlapCollider = this.physics.add.overlap(this.player, finishImage, this.onEnterFinish, null, this);
     }
 
