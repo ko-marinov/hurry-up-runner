@@ -2,6 +2,7 @@ import 'phaser';
 import { Player } from '../player.ts';
 import { Walker } from '../walker';
 import { Bird } from '../bird';
+import { BananaPeel } from '../BananaPeel';
 import { StaminaBar } from '../StaminaBar';
 
 var layer;
@@ -85,9 +86,7 @@ class LevelBase extends Phaser.Scene {
         this.textTime = this.add.text(590, 1010, '');
         this.staminaBar = new StaminaBar(this, 20, 1010, this.player);
 
-        this.bananas = this.physics.add.staticGroup();
-        this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
-
+        this.initBananas();
         this.initWalkers();
         this.initBirdTriggers();
 
@@ -125,7 +124,10 @@ class LevelBase extends Phaser.Scene {
     }
 
     startGame() {
-        this.initBananas();
+        this.bananaPeels.forEach(bananaPeel => {
+            bananaPeel.reset();
+        });
+
         this.initFinish();
 
         this.walkers.forEach(walker => {
@@ -171,7 +173,6 @@ class LevelBase extends Phaser.Scene {
 
     restartGame() {
         this.scene.setActive(true, this.levelName);
-        this.bananas.clear(true, true);
         this.physics.world.removeCollider(this.finishOverlapCollider);
 
         this.player.setPosition(this.playerStartPos.x, this.playerStartPos.y);
@@ -187,22 +188,28 @@ class LevelBase extends Phaser.Scene {
     }
 
     initBananas() {
-        layer.forEachTile(function (tile) {
-            if (tile.properties.isBanana) {
-                let collisionRect = tile.getCollisionGroup().objects[0];
-                let banana = this.bananas.create(
-                    layer.x + tile.pixelX + collisionRect.x,
-                    layer.y + tile.pixelY + collisionRect.y,
-                    null, null, false, true);
-                banana.body.setSize(collisionRect.width, collisionRect.height);
-            }
-        }, this);
+        this.bananaPeels = [];
+
+        let bananaPeelsPositions = GetObjectsByType(this.positionsLayer, 'BananaPeel');
+        bananaPeelsPositions.forEach(pos => {
+            console.log(pos);
+            let bananaPeel = new BananaPeel(this, { x: pos.x, y: pos.y });
+
+            this.physics.add.collider(bananaPeel, layer);
+            this.physics.add.overlap(this.player, bananaPeel, this.onStepOnBanana, null, this);
+
+            this.bananaPeels.push(bananaPeel);
+        });
     }
 
     onStepOnBanana(player, banana) {
+        if (banana.isUsed) {
+            return;
+        }
+
         console.log("Player stepped on banana at (%d, %d)", banana.x, banana.y);
         player.onStepOnBanana();
-        this.bananas.remove(banana);
+        banana.flyAway();
     }
 
     initFinish() {

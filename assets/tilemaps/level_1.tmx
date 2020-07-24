@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.5" orientation="orthogonal" renderorder="right-up" width="64" height="17" tilewidth="16" tileheight="16" infinite="1" nextlayerid="11" nextobjectid="19">
+<map version="1.2" tiledversion="1.3.5" orientation="orthogonal" renderorder="right-up" width="64" height="17" tilewidth="16" tileheight="16" infinite="1" nextlayerid="11" nextobjectid="21">
  <editorsettings>
   <export target="level_1.json" format="json"/>
  </editorsettings>
@@ -284,7 +284,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,3,0,0,0,0,0,0,0,0,4,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,9,1,
 7,8,6,7,8,6,7,8,6,7,8,6,7,8,14,7,
 11,11,12,2147483664,11,11,11,11,11,11,13,11,11,11,14,11,
@@ -320,7 +320,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,10,
 6,7,8,6,7,8,6,7,8,6,7,8,6,7,15,15,
 11,11,11,11,11,11,11,11,11,11,11,11,11,11,15,15,
@@ -426,6 +426,12 @@
    <point/>
   </object>
   <object id="17" name="BirdTrigger_1" type="BirdTrigger" x="432" y="448">
+   <point/>
+  </object>
+  <object id="19" name="BananaPeel_1" type="BananaPeel" x="336" y="448">
+   <point/>
+  </object>
+  <object id="20" name="BananaPeel_2" type="BananaPeel" x="928" y="448">
    <point/>
   </object>
  </objectgroup>

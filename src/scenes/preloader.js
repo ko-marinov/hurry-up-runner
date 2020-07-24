@@ -6,6 +6,7 @@ import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
 import mainCharSpritesheet from '../../assets/sprites/main_char.png';
 import npcSpritesheet1 from '../../assets/sprites/npc_1.png';
 import birdSpritesheet from '../../assets/sprites/bird.png';
+import bananaPeelSpritesheet from '../../assets/sprites/banana_peel.png';
 
 const LevelMaps = [
     { key: 'Level1', file: '../assets/tilemaps/level_1.json' },
@@ -42,6 +43,7 @@ export class Preloader extends Phaser.Scene {
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('npc1', npcSpritesheet1, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('bird', birdSpritesheet, { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('banana-peel', bananaPeelSpritesheet, { frameWidth: 16, frameHeight: 16 });
 
         LevelMaps.forEach(function (mapData) {
             this.load.tilemapTiledJSON(mapData.key, mapData.file);
@@ -164,6 +166,11 @@ export class Preloader extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('ui-score-image', { start: 3, end: 4 }),
             frameRate: 4,
             repeat: -1
+        });
+        this.anims.create({
+            key: 'bananaPeelFlyAway',
+            frames: this.anims.generateFrameNumbers('banana-peel', { start: 0, end: 9 }),
+            frameRate: 18
         });
     }
 }
