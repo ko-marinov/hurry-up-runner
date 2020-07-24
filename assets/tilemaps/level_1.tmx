@@ -4,6 +4,9 @@
   <export target="level_1.json" format="json"/>
  </editorsettings>
  <properties>
+  <property name="1stars" type="int" value="14000"/>
+  <property name="2stars" type="int" value="13000"/>
+  <property name="3stars" type="int" value="12000"/>
   <property name="Time Limit" type="int" value="15000"/>
  </properties>
  <tileset firstgid="1" name="city-tileset" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="25" columns="5">

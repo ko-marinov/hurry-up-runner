@@ -141,5 +141,29 @@ export class Preloader extends Phaser.Scene {
             frameRate: 1,
             repeat: -1
         });
+        this.anims.create({
+            key: 'scoreStars0',
+            frames: [{ key: 'ui-score-image', frame: 0 }],
+            frameRate: 1,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'scoreStars1',
+            frames: [{ key: 'ui-score-image', frame: 1 }],
+            frameRate: 1,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'scoreStars2',
+            frames: [{ key: 'ui-score-image', frame: 2 }],
+            frameRate: 1,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'scoreStars3',
+            frames: this.anims.generateFrameNumbers('ui-score-image', { start: 3, end: 4 }),
+            frameRate: 4,
+            repeat: -1
+        });
     }
 }
