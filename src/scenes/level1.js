@@ -2,6 +2,7 @@ import 'phaser';
 import { Player } from '../player.ts';
 import { Walker } from '../walker';
 import { Bird } from '../bird';
+import { StaminaBar } from '../StaminaBar';
 
 var layer;
 
@@ -82,6 +83,7 @@ class LevelBase extends Phaser.Scene {
         ]
         console.log("STARS CONDS", this.starsTimeConditions);
         this.textTime = this.add.text(590, 1010, '');
+        this.staminaBar = new StaminaBar(this, 20, 1010, this.player);
 
         this.bananas = this.physics.add.staticGroup();
         this.physics.add.overlap(this.player, this.bananas, this.onStepOnBanana, null, this);
@@ -152,6 +154,7 @@ class LevelBase extends Phaser.Scene {
         else {
             this.player.updateVelocity();
             this.updateTimeFromStart(delta);
+            this.staminaBar.update();
             this.tryLaunchBird();
         }
     }

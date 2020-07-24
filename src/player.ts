@@ -18,6 +18,7 @@ const VELOCITY_DODGE = VELOCITY_RUN * 1.8;
 export class Player extends Phaser.Physics.Arcade.Sprite {
     velocityX: number;
     jumpTime: number;
+    stamina: number;
     impulseTween: Phaser.Tweens.Tween;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
@@ -31,6 +32,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(10, 10);
         this.body.setSize(10, 20, false);
         this.jumpTime = 0;
+        this.stamina = 1;
 
         this.on('animationcomplete', this.animComplete, this);
 
@@ -229,5 +231,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             velocityX: VELOCITY_RUN,
             ease: "Quad.easeOut"
         });
+    }
+
+    getStamina() {
+        return this.stamina;
     }
 }
