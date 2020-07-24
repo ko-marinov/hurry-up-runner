@@ -141,6 +141,7 @@ class LevelBase extends Phaser.Scene {
         this.levelComplete = false;
         this.timeRemaining = this.levelData.get('Time Limit');
         this.isLevelStarted = true;
+        this.player.restoreFullStamina();
         this.player.run();
     }
 
@@ -153,6 +154,7 @@ class LevelBase extends Phaser.Scene {
         }
         else {
             this.player.updateVelocity();
+            this.player.updateStamina(delta);
             this.updateTimeFromStart(delta);
             this.staminaBar.update();
             this.tryLaunchBird();
