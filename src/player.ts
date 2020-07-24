@@ -15,9 +15,16 @@ const VELOCITY_JUMP = VELOCITY_RUN * 1.8;
 const VELOCITY_DASH = VELOCITY_RUN * 2.4;
 const VELOCITY_DODGE = VELOCITY_RUN * 1.8;
 
+const MAX_STAMINA = 1;
+const STAMINA_RESTORATION_RATE = 0.25 * MAX_STAMINA;
+const STAMINA_COST_JUMP = 0.2 * MAX_STAMINA;
+const STAMINA_COST_DODGE = 0.2 * MAX_STAMINA;
+const STAMINA_COST_DASH = 0.3 * MAX_STAMINA;
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
     velocityX: number;
     jumpTime: number;
+    stamina: number;
     impulseTween: Phaser.Tweens.Tween;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
@@ -31,6 +38,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(10, 10);
         this.body.setSize(10, 20, false);
         this.jumpTime = 0;
+        this.stamina = MAX_STAMINA;
 
         this.on('animationcomplete', this.animComplete, this);
 
@@ -67,6 +75,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.body.blocked.down) {
             return;
         }
+        if (!this.hasEnoughStamina(STAMINA_COST_JUMP)) {
+            return;
+        }
+        this.stamina -= STAMINA_COST_JUMP;
         this.setVelocityY(-150);
         this.applyVelocityImpulse(VELOCITY_JUMP, 500);
         this.play('jump', false);
@@ -75,9 +87,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryDash() {
-        if (this.state != PlayerState.JUMP) { return; }
+        if (this.state != PlayerState.JUMP) {
+            return;
+        }
         let timePastFromJump = this.scene.time.now - this.jumpTime;
-        if (timePastFromJump > 200) { return; }
+        if (timePastFromJump > 200) {
+            return;
+        }
+        if (!this.hasEnoughStamina(STAMINA_COST_DASH)) {
+            return;
+        }
+        this.stamina -= STAMINA_COST_DASH;
         this.setVelocityY(-100);
         this.applyVelocityImpulse(VELOCITY_DASH, 800);
         this.play('dash', false);
@@ -91,6 +111,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.isCloseToWalker()) {
             return;
         }
+        if (!this.hasEnoughStamina(STAMINA_COST_DODGE)) {
+            return;
+        }
+        this.stamina -= STAMINA_COST_DODGE;
         this.applyVelocityImpulse(VELOCITY_DODGE, 300);
         this.play('dodge', false);
         this.updateState(PlayerState.DODGE);
@@ -229,5 +253,22 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             velocityX: VELOCITY_RUN,
             ease: "Quad.easeOut"
         });
+    }
+
+    getStamina() {
+        return this.stamina;
+    }
+
+    updateStamina(deltaMs) {
+        let restoredStamina = STAMINA_RESTORATION_RATE * deltaMs / 1000;
+        this.stamina = this.stamina + restoredStamina < MAX_STAMINA ? this.stamina + restoredStamina : MAX_STAMINA;
+    }
+
+    hasEnoughStamina(stamina) {
+        return this.stamina > stamina;
+    }
+
+    restoreFullStamina() {
+        this.stamina = MAX_STAMINA;
     }
 }
