@@ -24,8 +24,10 @@ const STAMINA_COST_DASH = 0.3 * MAX_STAMINA;
 export class Player extends Phaser.Physics.Arcade.Sprite {
     velocityX: number;
     jumpTime: number;
+    stepOnBananaTime: number;
     stamina: number;
     impulseTween: Phaser.Tweens.Tween;
+    stumbleTween: Phaser.Tweens.Tween;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'char');
@@ -38,6 +40,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(10, 10);
         this.body.setSize(10, 20, false);
         this.jumpTime = 0;
+        this.stepOnBananaTime = 0;
         this.stamina = MAX_STAMINA;
 
         this.on('animationcomplete', this.animComplete, this);
@@ -87,21 +90,36 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryDash() {
-        if (this.state != PlayerState.JUMP) {
-            return;
-        }
-        let timePastFromJump = this.scene.time.now - this.jumpTime;
-        if (timePastFromJump > 200) {
+        if (!this.isRegularDash() && !this.isBananaDash()) {
             return;
         }
         if (!this.hasEnoughStamina(STAMINA_COST_DASH)) {
             return;
         }
         this.stamina -= STAMINA_COST_DASH;
+        if (this.stumbleTween != undefined) {
+            this.stumbleTween.stop();
+        }
         this.setVelocityY(-100);
         this.applyVelocityImpulse(VELOCITY_DASH, 800);
         this.play('dash', false);
         this.updateState(PlayerState.DASH);
+    }
+
+    isRegularDash() {
+        if (this.state != PlayerState.JUMP) {
+            return false;
+        }
+        let timePastFromJump = this.scene.time.now - this.jumpTime;
+        return timePastFromJump <= 200;
+    }
+
+    isBananaDash() {
+        if (this.state != PlayerState.STUMBLED) {
+            return false;
+        }
+        let timePastFromStemOnBanana = this.scene.time.now - this.stepOnBananaTime;
+        return timePastFromStemOnBanana <= 40;
     }
 
     tryDodge() {
@@ -124,7 +142,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.impulseTween) { this.impulseTween.stop(); }
         this.play('stumble', true);
         this.updateState(PlayerState.STUMBLED);
-        this.scene.tweens.add({
+        this.stumbleTween = this.scene.tweens.add({
             targets: this,
             duration: 500,
             velocityX: 0,
@@ -192,6 +210,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     onStepOnBanana() {
         if (this.state === PlayerState.STUMBLED) { return; }
+        this.stepOnBananaTime = this.scene.time.now;
         this.stumble();
     }
 
