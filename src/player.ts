@@ -100,7 +100,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.stumbleTween != undefined) {
             this.stumbleTween.stop();
         }
-        this.setVelocityY(-100);
+        if (this.isBananaDash()) {
+            this.setVelocityY(-150);
+        } else {
+            this.setVelocityY(-100);
+        }
         this.applyVelocityImpulse(VELOCITY_DASH, 800);
         this.play('dash', false);
         this.updateState(PlayerState.DASH);
