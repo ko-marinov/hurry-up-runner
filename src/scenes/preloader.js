@@ -9,7 +9,7 @@ import birdSpritesheet from '../../assets/sprites/bird.png';
 import bananaPeelSpritesheet from '../../assets/sprites/banana_peel.png';
 
 const LevelMaps = [
-    { key: 'Level1', file: '../assets/tilemaps/level_1.json' },
+    { key: 'Level1', file: '../assets/tilemaps/level_2.json' },
     { key: 'Level2', file: '../assets/tilemaps/level_1.json' },
     { key: 'Level3', file: '../assets/tilemaps/level_1.json' },
     { key: 'menu-map', file: '../assets/tilemaps/menu.json' }
