@@ -87,6 +87,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.play('jump', false);
         this.jumpTime = this.scene.time.now;
         this.updateState(PlayerState.JUMP);
+        this.scene.sound.play('snd-jump');
     }
 
     tryDash() {
@@ -108,6 +109,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.applyVelocityImpulse(VELOCITY_DASH, 800);
         this.play('dash', false);
         this.updateState(PlayerState.DASH);
+        this.scene.sound.stopByKey('snd-stumble');
+        this.scene.sound.play('snd-jump');
     }
 
     isRegularDash() {
@@ -140,11 +143,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.applyVelocityImpulse(VELOCITY_DODGE, 300);
         this.play('dodge', false);
         this.updateState(PlayerState.DODGE);
+        this.scene.sound.play('snd-dodge');
     }
 
     stumble() {
         if (this.impulseTween) { this.impulseTween.stop(); }
         this.play('stumble', true);
+        this.scene.sound.play('snd-stumble');
         this.updateState(PlayerState.STUMBLED);
         this.stumbleTween = this.scene.tweens.add({
             targets: this,
@@ -160,6 +165,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     bump() {
         if (this.impulseTween) { this.impulseTween.stop(); }
         this.play('bump', true);
+        this.scene.sound.play('snd-bump');
         this.updateState(PlayerState.STUMBLED);
         this.velocityX = -50;
         this.scene.tweens.add({

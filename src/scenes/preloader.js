@@ -69,7 +69,13 @@ export class Preloader extends Phaser.Scene {
         this.load.spritesheet('btn-resume', btnResumeImg, { frameWidth: 186, frameHeight: 40 });
         this.load.spritesheet('btn-volume', btnVolumeImg, { frameWidth: 40, frameHeight: 40 });
         this.load.spritesheet('ui-score-image', scoreImg, { frameWidth: 252, frameHeight: 83 });
+
         this.load.audio('music-loop', '../../assets/sounds/music_loop.mp3');
+        this.load.audio('snd-bump', '../../assets/sounds/bump.mp3');
+        this.load.audio('snd-dodge', '../../assets/sounds/dodge.mp3');
+        this.load.audio('snd-fall', '../../assets/sounds/fall.mp3');
+        this.load.audio('snd-jump', '../../assets/sounds/jump.mp3');
+        this.load.audio('snd-stumble', '../../assets/sounds/stumble.mp3');
 
         loadResources(this);
     }
