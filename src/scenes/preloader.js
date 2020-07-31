@@ -115,6 +115,7 @@ export class Preloader extends Phaser.Scene {
             key: 'fall',
             frames: this.anims.generateFrameNumbers('char', { start: 70, end: 74 }),
             frameRate: 10,
+            repeat: -1
         });
         this.anims.create({
             key: 'dodge',
