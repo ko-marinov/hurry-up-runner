@@ -5,8 +5,13 @@ import tilesetImg from '../../assets/tilesets/city-tileset.png';
 import bgTilesetImg from '../../assets/tilesets/city-bg-tileset.png';
 import mainCharSpritesheet from '../../assets/sprites/main_char.png';
 import npcSpritesheet1 from '../../assets/sprites/npc_1.png';
+import npcSpritesheet2 from '../../assets/sprites/npc_2.png';
+import npcSpritesheet3 from '../../assets/sprites/npc_3.png';
 import birdSpritesheet from '../../assets/sprites/bird.png';
 import bananaPeelSpritesheet from '../../assets/sprites/banana_peel.png';
+import shopkeepersSpritesheet from '../../assets/sprites/shopkeepers.png';
+
+import { loadResources } from '../_resources';
 
 const LevelMaps = [
     { key: 'Level1', file: '../assets/tilemaps/level_2.json' },
@@ -41,9 +46,15 @@ export class Preloader extends Phaser.Scene {
         this.load.image('city-tileset', tilesetImg);
         this.load.image('city-bg-tileset', bgTilesetImg);
         this.load.spritesheet('char', mainCharSpritesheet, { frameWidth: 32, frameHeight: 32 });
+
         this.load.spritesheet('npc1', npcSpritesheet1, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('npc2', npcSpritesheet2, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('npc3', npcSpritesheet3, { frameWidth: 32, frameHeight: 32 });
+        this.walkerCount = 3;
+
         this.load.spritesheet('bird', birdSpritesheet, { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('banana-peel', bananaPeelSpritesheet, { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('shopkeepers', shopkeepersSpritesheet, { frameWidth: 16, frameHeight: 16 });
 
         LevelMaps.forEach(function (mapData) {
             this.load.tilemapTiledJSON(mapData.key, mapData.file);
@@ -59,6 +70,8 @@ export class Preloader extends Phaser.Scene {
         this.load.spritesheet('btn-volume', btnVolumeImg, { frameWidth: 40, frameHeight: 40 });
         this.load.spritesheet('ui-score-image', scoreImg, { frameWidth: 252, frameHeight: 83 });
         this.load.audio('music-loop', '../../assets/sounds/music_loop.mp3');
+
+        loadResources(this);
     }
 
     create() {
@@ -115,22 +128,25 @@ export class Preloader extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('char', { start: 84, end: 93 }),
             frameRate: 30,
         });
-        this.anims.create({
-            key: 'npc1Walk',
-            frames: this.anims.generateFrameNumbers('npc1', { start: 5, end: 8 }),
-            frameRate: 8,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'npc1Stumble',
-            frames: this.anims.generateFrameNumbers('npc1', { start: 10, end: 14 }),
-            frameRate: 12,
-        });
-        this.anims.create({
-            key: 'npc1Bump',
-            frames: this.anims.generateFrameNumbers('npc1', { start: 15, end: 19 }),
-            frameRate: 12,
-        });
+        for (let walkerIndex = 1; walkerIndex <= this.walkerCount; walkerIndex++) {
+            const walker = 'npc' + walkerIndex;
+            this.anims.create({
+                key: walker + 'Walk',
+                frames: this.anims.generateFrameNumbers(walker, { start: 5, end: 8 }),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: walker + 'Stumble',
+                frames: this.anims.generateFrameNumbers(walker, { start: 10, end: 14 }),
+                frameRate: 12,
+            });
+            this.anims.create({
+                key: walker + 'Bump',
+                frames: this.anims.generateFrameNumbers(walker, { start: 15, end: 19 }),
+                frameRate: 12,
+            });
+        }
         this.anims.create({
             key: 'birdFly',
             frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 1 }),
