@@ -257,7 +257,8 @@ class LevelBase extends Phaser.Scene {
             let walker = new Walker(this, {
                 fromX: inverse ? x + path.polyline[1].x : x,
                 toX: inverse ? x : x + path.polyline[1].x,
-                fromY: y
+                fromY: y,
+                type: Math.floor(1 + Math.random() * Walker.WALKER_TYPE_COUNT)
             });
 
             this.physics.add.collider(walker, layer);
