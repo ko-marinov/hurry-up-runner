@@ -1,6 +1,6 @@
 import 'phaser';
 import { Player } from '../player.ts';
-import { Level1, Level2, Level3 } from './level1';
+import { Level1, Level2, Level3, GetObjectsCollection } from './level1';
 
 const UI_TITLE_IMG = 'title';
 const UI_SCORE_IMG = 'score';
@@ -183,6 +183,15 @@ export class MainMenu extends Phaser.Scene {
         this.playerStartPos = positionsLayer.objects.find(function (elem, index, arr) {
             return elem['name'] == 'PlayerStartPos';
         });
+
+        let objectsCollection = GetObjectsCollection(this.map);
+        positionsLayer.objects.forEach((obj) => {
+            console.log(obj);
+            if (obj.gid != undefined) {
+                this.map.createFromObjects('Positions', obj.gid, { key: objectsCollection[obj.gid] });
+            }
+        });
+
         this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y)
         this.player.setOrigin(0.5, 1);
         this.player.play('idle');
