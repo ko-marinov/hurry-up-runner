@@ -259,151 +259,151 @@
          "tiles":[
                 {
                  "id":0,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/air_conditioning.png",
+                 "image":"..\/objects\/air_conditioning.png",
                  "imageheight":17,
                  "imagewidth":28
                 }, 
                 {
                  "id":1,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/bench.png",
+                 "image":"..\/objects\/bench.png",
                  "imageheight":12,
                  "imagewidth":26
                 }, 
                 {
                  "id":2,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/bilboard_hand.png",
+                 "image":"..\/objects\/bilboard_hand.png",
                  "imageheight":4,
                  "imagewidth":12
                 }, 
                 {
                  "id":3,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/billboard_1.png",
+                 "image":"..\/objects\/billboard_1.png",
                  "imageheight":94,
                  "imagewidth":34
                 }, 
                 {
                  "id":4,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/billboard_2.png",
+                 "image":"..\/objects\/billboard_2.png",
                  "imageheight":94,
                  "imagewidth":34
                 }, 
                 {
                  "id":5,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/billboard_3.png",
+                 "image":"..\/objects\/billboard_3.png",
                  "imageheight":78,
                  "imagewidth":34
                 }, 
                 {
                  "id":6,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/billboard_4.png",
+                 "image":"..\/objects\/billboard_4.png",
                  "imageheight":62,
                  "imagewidth":34
                 }, 
                 {
                  "id":7,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/billboard_5.png",
+                 "image":"..\/objects\/billboard_5.png",
                  "imageheight":78,
                  "imagewidth":34
                 }, 
                 {
                  "id":8,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/bush_1.png",
+                 "image":"..\/objects\/bush_1.png",
                  "imageheight":36,
                  "imagewidth":40
                 }, 
                 {
                  "id":9,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/bush_2.png",
+                 "image":"..\/objects\/bush_2.png",
                  "imageheight":36,
                  "imagewidth":40
                 }, 
                 {
                  "id":10,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/entrance_1.png",
+                 "image":"..\/objects\/entrance_1.png",
                  "imageheight":74,
                  "imagewidth":46
                 }, 
                 {
                  "id":11,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/entrance_2.png",
+                 "image":"..\/objects\/entrance_2.png",
                  "imageheight":74,
                  "imagewidth":46
                 }, 
                 {
                  "id":12,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/fire_hydrant.png",
+                 "image":"..\/objects\/fire_hydrant.png",
                  "imageheight":11,
                  "imagewidth":9
                 }, 
                 {
                  "id":13,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/road_sign_1.png",
+                 "image":"..\/objects\/road_sign_1.png",
                  "imageheight":56,
                  "imagewidth":27
                 }, 
                 {
                  "id":14,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/road_sign_2.png",
+                 "image":"..\/objects\/road_sign_2.png",
                  "imageheight":56,
                  "imagewidth":27
                 }, 
                 {
                  "id":15,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/road_sign_3.png",
+                 "image":"..\/objects\/road_sign_3.png",
                  "imageheight":56,
                  "imagewidth":27
                 }, 
                 {
                  "id":16,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/road_sign_4.png",
+                 "image":"..\/objects\/road_sign_4.png",
                  "imageheight":56,
                  "imagewidth":27
                 }, 
                 {
                  "id":17,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/shop_1.png",
+                 "image":"..\/objects\/shop_1.png",
                  "imageheight":48,
                  "imagewidth":72
                 }, 
                 {
                  "id":18,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/shop_2.png",
+                 "image":"..\/objects\/shop_2.png",
                  "imageheight":48,
                  "imagewidth":72
                 }, 
                 {
                  "id":19,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/shop_3.png",
+                 "image":"..\/objects\/shop_3.png",
                  "imageheight":48,
                  "imagewidth":72
                 }, 
                 {
                  "id":20,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/traffic_lights.png",
+                 "image":"..\/objects\/traffic_lights.png",
                  "imageheight":62,
                  "imagewidth":11
                 }, 
                 {
                  "id":21,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/trash.png",
+                 "image":"..\/objects\/trash.png",
                  "imageheight":9,
                  "imagewidth":5
                 }, 
                 {
                  "id":22,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/tree_1.png",
+                 "image":"..\/objects\/tree_1.png",
                  "imageheight":90,
                  "imagewidth":54
                 }, 
                 {
                  "id":23,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/tree_2.png",
+                 "image":"..\/objects\/tree_2.png",
                  "imageheight":90,
                  "imagewidth":90
                 }, 
                 {
                  "id":24,
-                 "image":"..\/..\/..\/coding\/phaser_projects\/hurry-up-runner\/assets\/objects\/tree_3.png",
+                 "image":"..\/objects\/tree_3.png",
                  "imageheight":90,
                  "imagewidth":54
                 }],

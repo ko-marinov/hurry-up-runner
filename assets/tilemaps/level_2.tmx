@@ -23,79 +23,79 @@
  <tileset firstgid="282" name="city_objects" tilewidth="90" tileheight="94" tilecount="25" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
-   <image width="28" height="17" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/air_conditioning.png"/>
+   <image width="28" height="17" source="../objects/air_conditioning.png"/>
   </tile>
   <tile id="1">
-   <image width="26" height="12" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/bench.png"/>
+   <image width="26" height="12" source="../objects/bench.png"/>
   </tile>
   <tile id="2">
-   <image width="12" height="4" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/bilboard_hand.png"/>
+   <image width="12" height="4" source="../objects/bilboard_hand.png"/>
   </tile>
   <tile id="3">
-   <image width="34" height="94" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/billboard_1.png"/>
+   <image width="34" height="94" source="../objects/billboard_1.png"/>
   </tile>
   <tile id="4">
-   <image width="34" height="94" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/billboard_2.png"/>
+   <image width="34" height="94" source="../objects/billboard_2.png"/>
   </tile>
   <tile id="5">
-   <image width="34" height="78" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/billboard_3.png"/>
+   <image width="34" height="78" source="../objects/billboard_3.png"/>
   </tile>
   <tile id="6">
-   <image width="34" height="62" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/billboard_4.png"/>
+   <image width="34" height="62" source="../objects/billboard_4.png"/>
   </tile>
   <tile id="7">
-   <image width="34" height="78" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/billboard_5.png"/>
+   <image width="34" height="78" source="../objects/billboard_5.png"/>
   </tile>
   <tile id="8">
-   <image width="40" height="36" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/bush_1.png"/>
+   <image width="40" height="36" source="../objects/bush_1.png"/>
   </tile>
   <tile id="9">
-   <image width="40" height="36" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/bush_2.png"/>
+   <image width="40" height="36" source="../objects/bush_2.png"/>
   </tile>
   <tile id="10">
-   <image width="46" height="74" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/entrance_1.png"/>
+   <image width="46" height="74" source="../objects/entrance_1.png"/>
   </tile>
   <tile id="11">
-   <image width="46" height="74" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/entrance_2.png"/>
+   <image width="46" height="74" source="../objects/entrance_2.png"/>
   </tile>
   <tile id="12">
-   <image width="9" height="11" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/fire_hydrant.png"/>
+   <image width="9" height="11" source="../objects/fire_hydrant.png"/>
   </tile>
   <tile id="13">
-   <image width="27" height="56" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/road_sign_1.png"/>
+   <image width="27" height="56" source="../objects/road_sign_1.png"/>
   </tile>
   <tile id="14">
-   <image width="27" height="56" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/road_sign_2.png"/>
+   <image width="27" height="56" source="../objects/road_sign_2.png"/>
   </tile>
   <tile id="15">
-   <image width="27" height="56" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/road_sign_3.png"/>
+   <image width="27" height="56" source="../objects/road_sign_3.png"/>
   </tile>
   <tile id="16">
-   <image width="27" height="56" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/road_sign_4.png"/>
+   <image width="27" height="56" source="../objects/road_sign_4.png"/>
   </tile>
   <tile id="17">
-   <image width="72" height="48" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/shop_1.png"/>
+   <image width="72" height="48" source="../objects/shop_1.png"/>
   </tile>
   <tile id="18">
-   <image width="72" height="48" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/shop_2.png"/>
+   <image width="72" height="48" source="../objects/shop_2.png"/>
   </tile>
   <tile id="19">
-   <image width="72" height="48" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/shop_3.png"/>
+   <image width="72" height="48" source="../objects/shop_3.png"/>
   </tile>
   <tile id="20">
-   <image width="11" height="62" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/traffic_lights.png"/>
+   <image width="11" height="62" source="../objects/traffic_lights.png"/>
   </tile>
   <tile id="21">
-   <image width="5" height="9" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/trash.png"/>
+   <image width="5" height="9" source="../objects/trash.png"/>
   </tile>
   <tile id="22">
-   <image width="54" height="90" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/tree_1.png"/>
+   <image width="54" height="90" source="../objects/tree_1.png"/>
   </tile>
   <tile id="23">
-   <image width="90" height="90" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/tree_2.png"/>
+   <image width="90" height="90" source="../objects/tree_2.png"/>
   </tile>
   <tile id="24">
-   <image width="54" height="90" source="../../../coding/phaser_projects/hurry-up-runner/assets/objects/tree_3.png"/>
+   <image width="54" height="90" source="../objects/tree_3.png"/>
   </tile>
  </tileset>
  <layer id="4" name="Background2" width="120" height="17">
