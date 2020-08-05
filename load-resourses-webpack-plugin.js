@@ -14,6 +14,10 @@ class LoadResourcesWebpackPlugin {
             resources.forEach((rc) => {
                 // cut file extension
                 let varName = rc.slice(0, rc.lastIndexOf('.'));
+                let extension = rc.slice(rc.lastIndexOf('.') + 1);
+                if (varName == '' || extension != 'png') {
+                    return;
+                }
                 let rcImportItem = 'import ' + varName + ' from \'../' + rcDirPath + '/' + rc + '\';\n';
                 content += rcImportItem;
             });
@@ -24,6 +28,10 @@ class LoadResourcesWebpackPlugin {
             resources.forEach((rc) => {
                 // cut file extension
                 let varName = rc.slice(0, rc.lastIndexOf('.'));
+                let extension = rc.slice(rc.lastIndexOf('.') + 1);
+                if (varName == '' || extension != 'png') {
+                    return;
+                }
                 let rcImportItem = '\tscene.load.image(\'' + varName + '\', ' + varName + ');\n';
                 content += rcImportItem;
             });
