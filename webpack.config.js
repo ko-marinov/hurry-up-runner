@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const LoadResourcesPlugin = require('./load-resourses-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ZipPlugin = require('zip-webpack-plugin');
 
@@ -30,6 +31,7 @@ module.exports = {
         ],
     },
     plugins: [
+        new LoadResourcesPlugin(),
         new CopyPlugin([
             { from: 'assets/**/*.json' },
             { from: 'assets/**/*.mp3' },

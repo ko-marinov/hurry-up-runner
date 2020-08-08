@@ -7,6 +7,17 @@ import { StaminaBar } from '../StaminaBar';
 
 var layer;
 
+export function GetObjectsCollection(map) {
+    let collection = [];
+
+    map.tilesets.forEach((tileset) => {
+        let key = tileset.name.slice(tileset.name.lastIndexOf('/') + 1, tileset.name.lastIndexOf('.'));
+        collection[tileset.firstgid] = key;
+    });
+
+    return collection;
+}
+
 function GetObjectByName(objectLayer, name) {
     return objectLayer.objects.find(function (elem, index, arr) {
         return elem['name'] == name;
@@ -50,10 +61,20 @@ class LevelBase extends Phaser.Scene {
         this.map.setCollision([1, 2, 6, 7, 8, 10], true, true, layer);
 
         this.positionsLayer = this.map.getObjectLayer('Positions');
+        this.cityObjectsLayer = this.map.getObjectLayer('CityObjects');
 
         this.cameras.main.setBackgroundColor("#87ceeb");
 
         this.playerStartPos = GetObjectByName(this.positionsLayer, 'PlayerStartPos');
+
+        let objectsCollection = GetObjectsCollection(this.map);
+        console.log("Objects Collection:", objectsCollection);
+        this.cityObjectsLayer.objects.forEach((obj) => {
+            console.log(obj);
+            if (obj.gid != undefined) {
+                this.map.createFromObjects('CityObjects', obj.gid, { key: objectsCollection[obj.gid] });
+            }
+        });
 
         this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y).setOrigin(0.5, 1);
 
@@ -256,7 +277,8 @@ class LevelBase extends Phaser.Scene {
             let walker = new Walker(this, {
                 fromX: inverse ? x + path.polyline[1].x : x,
                 toX: inverse ? x : x + path.polyline[1].x,
-                fromY: y
+                fromY: y,
+                type: Math.floor(1 + Math.random() * Walker.WALKER_TYPE_COUNT)
             });
 
             this.physics.add.collider(walker, layer);

@@ -1,8 +1,17 @@
 import 'phaser';
 
 export class Walker extends Phaser.Physics.Arcade.Sprite {
+    static get WALKER_TYPE_COUNT() {
+        return 3;
+    }
+
     constructor(scene, config) {
-        super(scene, config.fromX, config.fromY, 'npc1');
+        super(scene, config.fromX, config.fromY, 'npc' + config.type);
+
+        this.type = config.type;
+        this.animWalk = 'npc' + this.type + 'Walk';
+        this.animStumble = 'npc' + this.type + 'Stumble';
+        this.animBump = 'npc' + this.type + 'Bump';
 
         scene.sys.displayList.add(this);
         scene.sys.updateList.add(this);
@@ -26,7 +35,7 @@ export class Walker extends Phaser.Physics.Arcade.Sprite {
         let velocity = 30;
         let time = 1000 * Math.abs(this.x - this.toX) / velocity;
         this.setFlipX(this.fromX > this.toX);
-        this.play('npc1Walk', true);
+        this.play(this.animWalk, true);
         this.tween = this.scene.tweens.add({
             targets: this,
             duration: time,
@@ -53,9 +62,9 @@ export class Walker extends Phaser.Physics.Arcade.Sprite {
         this.isBumped = true;
         this.tween.stop();
         if (this.fromX > this.toX) {
-            this.play('npc1Bump');
+            this.play(this.animBump);
         } else {
-            this.play('npc1Stumble');
+            this.play(this.animStumble);
         }
         let newX = this.x + 20;
         this.scene.tweens.add({
