@@ -23,6 +23,8 @@ const STAMINA_COST_DASH = 0.3 * MAX_STAMINA;
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     velocityX: number;
+    fallThreshold: number;
+    isFalling: boolean;
     jumpTime: number;
     stepOnBananaTime: number;
     stamina: number;
@@ -39,6 +41,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         this.body.setOffset(10, 10);
         this.body.setSize(10, 20, false);
+        this.fallThreshold = y + 1;
+        this.isFalling = false;
         this.jumpTime = 0;
         this.stepOnBananaTime = 0;
         this.stamina = MAX_STAMINA;
@@ -48,6 +52,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         scene.input.keyboard.on("keydown_SPACE", this.handleInput, this);
 
         this.idle();
+    }
+
+    update(deltaMs: number) {
+        super.update(deltaMs);
+
+        this.updateVelocity();
+        this.updateStamina(deltaMs);
+        this.updateFalling();
     }
 
     idle() {
@@ -193,6 +205,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     updateVelocity() {
         this.setVelocityX(this.velocityX);
+    }
+
+    updateFalling() {
+        if (this.body.y > this.fallThreshold) {
+            if (!this.isFalling) {
+                this.isFalling = true;
+                this.scene.sound.play('snd-fall');
+                this.play('fall', true, 2);
+                this.velocityX = 0;
+            }
+        } else {
+            this.isFalling = false;
+        }
     }
 
     handleInput() {

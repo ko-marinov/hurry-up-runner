@@ -176,8 +176,7 @@ class LevelBase extends Phaser.Scene {
         else if (this.isLevelComplete()) {
         }
         else {
-            this.player.updateVelocity();
-            this.player.updateStamina(delta);
+            this.player.update(delta);
             this.updateTimeFromStart(delta);
             this.staminaBar.update();
             this.tryLaunchBird();
