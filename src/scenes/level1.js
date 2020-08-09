@@ -91,8 +91,7 @@ class LevelBase extends Phaser.Scene {
 
         this.physics.add.collider(this.player, layer);
 
-        this.input.keyboard.on("keyup_R", this.restartGame, this);
-        this.input.keyboard.on("keyup_ESC", this.pauseGame, this);
+        this.areControlsEnabled = false;
 
         this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 65);
         this.cameras.main.setZoom(2);
@@ -127,6 +126,8 @@ class LevelBase extends Phaser.Scene {
     }
 
     preStart() {
+        this.enableControls();
+
         this.bananaPeels.forEach(bananaPeel => {
             bananaPeel.reset();
         });
@@ -275,6 +276,8 @@ class LevelBase extends Phaser.Scene {
         this.levelComplete = true;
         let stars = this.countStars();
         this.scene.get('MainMenu').showVictoryScreen(stars);
+
+        this.disableControls();
     }
 
     countStars() {
@@ -367,6 +370,22 @@ class LevelBase extends Phaser.Scene {
 
     resumeGame() {
         this.scene.setActive(true, this.levelName);
+    }
+
+    enableControls() {
+        if (!this.areControlsEnabled) {
+            this.input.keyboard.on("keyup_R", this.restartGame, this);
+            this.input.keyboard.on("keyup_ESC", this.pauseGame, this);
+            this.areControlsEnabled = true;
+        }
+    }
+
+    disableControls() {
+        if (this.areControlsEnabled) {
+            this.input.keyboard.off("keyup_R", this.restartGame, this);
+            this.input.keyboard.off("keyup_ESC", this.pauseGame, this);
+            this.areControlsEnabled = false;
+        }
     }
 }
 
