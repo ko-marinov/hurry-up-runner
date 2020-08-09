@@ -29,6 +29,18 @@ export class Walker extends Phaser.Physics.Arcade.Sprite {
         this.initialToX = config.toX;
     }
 
+    reset() {
+        if (this.tween) {
+            this.tween.stop();
+        }
+        this.anims.stop();
+        this.setFrame(0);
+        this.isBumped = false;
+        this.fromX = this.initialFromX;
+        this.toX = this.initialToX;
+        this.x = this.fromX;
+    }
+
     walk() {
         if (this.tween) {
             this.tween.stop();
@@ -44,13 +56,6 @@ export class Walker extends Phaser.Physics.Arcade.Sprite {
             onComplete: this.onReachDestination,
             onCompleteScope: this
         });
-    }
-
-    walkFromStart() {
-        this.fromX = this.initialFromX;
-        this.toX = this.initialToX;
-        this.x = this.fromX;
-        this.walk();
     }
 
     onReachDestination(event, target) {

@@ -127,6 +127,29 @@ class LevelBase extends Phaser.Scene {
     }
 
     preStart() {
+        this.bananaPeels.forEach(bananaPeel => {
+            bananaPeel.reset();
+        });
+
+        this.initFinish();
+
+        this.walkers.forEach(walker => {
+            walker.reset();
+        });
+
+        this.birdTriggers.forEach(trig => {
+            trig.enabled = true;
+            trig.bird.reset();
+        });
+
+        this.isLevelStarted = false;
+        this.levelComplete = false;
+        this.timeRemaining = this.levelData.get('Time Limit');
+        this.player.setPosition(this.playerStartPos.x, this.playerStartPos.y);
+        this.player.restoreFullStamina();
+        this.player.idle();
+        this.cameras.main.startFollow(this.player, false, 1, 1, -80, 65);
+
         this.time.delayedCall(1000, this.startGame, null, this);
     }
 
@@ -157,31 +180,18 @@ class LevelBase extends Phaser.Scene {
     }
 
     startGame() {
-        this.bananaPeels.forEach(bananaPeel => {
-            bananaPeel.reset();
-        });
-
-        this.initFinish();
-
         this.walkers.forEach(walker => {
-            walker.isBumped = false;
-            walker.walkFromStart();
+            walker.walk();
         });
 
-        this.birdTriggers.forEach(trig => {
-            trig.enabled = true;
-            trig.bird.reset();
-        });
-
-        this.levelComplete = false;
-        this.timeRemaining = this.levelData.get('Time Limit');
         this.isLevelStarted = true;
-        this.player.restoreFullStamina();
         this.player.run();
+        this.cameras.main.startFollow(this.player, false, 0.08, 0, -80, 65);
     }
 
     update(time, delta) {
         if (this.isLevelFailed()) {
+            this.cameras.main.stopFollow();
             this.scene.setActive(false, this.levelName);
             this.scene.get('MainMenu').showFailScreen();
         }
@@ -210,8 +220,7 @@ class LevelBase extends Phaser.Scene {
         this.scene.setActive(true, this.levelName);
         this.physics.world.removeCollider(this.finishOverlapCollider);
 
-        this.player.setPosition(this.playerStartPos.x, this.playerStartPos.y);
-        this.startGame();
+        this.preStart();
     }
 
     isLevelComplete() {
