@@ -87,7 +87,7 @@ class LevelBase extends Phaser.Scene {
             }
         });
 
-        this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y).setOrigin(0.5, 1);
+        this.player = new Player(this, this.playerStartPos.x, this.playerStartPos.y).setOrigin(0.5, 0.94);
 
         this.physics.add.collider(this.player, layer);
 
@@ -151,7 +151,10 @@ class LevelBase extends Phaser.Scene {
         this.player.idle();
         this.cameras.main.startFollow(this.player, false, 1, 1, -80, 65);
 
-        this.time.delayedCall(1000, this.startGame, null, this);
+        if (this.delayedStartTask) {
+            this.delayedStartTask.remove(false);
+        }
+        this.delayedStartTask = this.time.delayedCall(1000, this.startGame, null, this);
     }
 
     getWalkers() {
