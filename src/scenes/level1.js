@@ -114,7 +114,7 @@ class LevelBase extends Phaser.Scene {
             this.levelData.get('3stars')
         ]
         console.log("STARS CONDS", this.starsTimeConditions);
-        this.textTime = this.add.text(590, 1010, '');
+        this.textTime = this.add.text(590, 1010, '', { fontFamily: 'vt323', fontSize: 22 });
         this.staminaBar = new StaminaBar(this, 20, 1010, this.player);
 
         this.initBananas();
@@ -195,9 +195,13 @@ class LevelBase extends Phaser.Scene {
 
     update(time, delta) {
         if (this.isLevelFailed()) {
+            let failReason = '';
+            if (this.timeRemaining === 0) {
+                failReason = "Time's up!";
+            }
             this.cameras.main.stopFollow();
             this.scene.setActive(false, this.levelName);
-            this.scene.get('MainMenu').showFailScreen();
+            this.scene.get('MainMenu').showFailScreen(failReason);
         }
         else if (this.isLevelComplete()) {
         }

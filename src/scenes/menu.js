@@ -198,6 +198,7 @@ export class MainMenu extends Phaser.Scene {
         this.physics.add.collider(this.player, layer);
 
         let center_x = this.game.config.width / 2;
+        this.failReasonText = this.add.text(center_x, 60, '', { fontFamily: 'vt323', fontSize: 40 });
 
         // Init UI elements
         this.uiElements = new Map();
@@ -301,9 +302,11 @@ export class MainMenu extends Phaser.Scene {
         this.input.keyboard.on("keyup_ESC", this.resumeGame, this);
     }
 
-    showFailScreen() {
+    showFailScreen(failReason) {
         this.scene.setVisible(true, 'MainMenu');
         this.setLayout(FAIL_LAYOUT);
+        this.failReasonText.setText(failReason);
+        this.failReasonText.x = (this.game.config.width - this.failReasonText.width) / 2;
         this.input.keyboard.on("keyup_ENTER", this.restartLevel, this);
     }
 
@@ -322,6 +325,7 @@ export class MainMenu extends Phaser.Scene {
         this.uiElements.forEach(function (uiElem) {
             uiElem.setVisible(false);
         });
+        this.failReasonText.setText('');
     }
 
     startGame(event) {
