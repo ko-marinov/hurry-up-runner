@@ -54,7 +54,7 @@ export class Preloader extends Phaser.Scene {
 
         this.load.spritesheet('bird', birdSpritesheet, { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('banana-peel', bananaPeelSpritesheet, { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('shopkeepers', shopkeepersSpritesheet, { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('shopkeepers', shopkeepersSpritesheet, { frameWidth: 14, frameHeight: 14 });
 
         LevelMaps.forEach(function (mapData) {
             this.load.tilemapTiledJSON(mapData.key, mapData.file);

@@ -4,6 +4,7 @@ import { Walker } from '../walker';
 import { Bird } from '../bird';
 import { BananaPeel } from '../BananaPeel';
 import { StaminaBar } from '../StaminaBar';
+import { Shopkeeper } from '../shopkeeper';
 
 var layer;
 
@@ -33,6 +34,16 @@ function GetObjectsByType(objectLayer, type) {
         }
     }
     return objects;
+}
+
+function GetObjectProperty(tiledObject, propName) {
+    let value = undefined;
+    tiledObject.properties.forEach(prop => {
+        if (prop.name === propName) {
+            value = prop.value;
+        }
+    });
+    return value;
 }
 
 class LevelBase extends Phaser.Scene {
@@ -110,6 +121,7 @@ class LevelBase extends Phaser.Scene {
         this.initBananas();
         this.initWalkers();
         this.initBirdTriggers();
+        this.initShopkeepers();
 
         this.preStart();
     }
@@ -180,6 +192,9 @@ class LevelBase extends Phaser.Scene {
             this.updateTimeFromStart(delta);
             this.staminaBar.update();
             this.tryLaunchBird();
+            this.shopkeepers.forEach(keeper => {
+                keeper.update();
+            });
         }
     }
 
@@ -299,6 +314,24 @@ class LevelBase extends Phaser.Scene {
             this.physics.add.overlap(this.player, bird, this.onRunIntoBird, null, this);
 
             this.birdTriggers.push({ x: trig.x, enabled: true, bird: bird });
+        });
+    }
+
+    initShopkeepers() {
+        this.shopkeepers = [];
+
+        let positionList = GetObjectsByType(this.positionsLayer, 'Shopkeeper');
+        positionList.forEach(pos => {
+            console.log(pos);
+            console.log('Shopkeeper type:', GetObjectProperty(pos, 'type'));
+            let shopkeeper = new Shopkeeper(this, {
+                x: pos.x,
+                y: pos.y,
+                type: GetObjectProperty(pos, 'type'),
+                player: this.player
+            });
+
+            this.shopkeepers.push(shopkeeper);
         });
     }
 

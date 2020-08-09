@@ -39,6 +39,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         this.scene = scene;
+        this.depth = 1;
         this.body.setOffset(10, 10);
         this.body.setSize(10, 20, false);
         this.fallThreshold = y + 1;
