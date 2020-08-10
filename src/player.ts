@@ -52,6 +52,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.on('animationcomplete', this.animComplete, this);
 
         scene.input.keyboard.on("keydown_SPACE", this.handleInput, this);
+        scene.input.on('pointerdown', this.handleInput, this);
 
         this.idle();
     }
