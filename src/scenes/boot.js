@@ -8,5 +8,6 @@ export class Boot extends Phaser.Scene {
 
     create() {
         this.scene.start('Preloader');
+        this.input.keyboard.addCapture(['SPACE', 'ESC']);
     }
 }
