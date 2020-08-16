@@ -67,8 +67,6 @@ class UiButton {
     press() {
         this.isPressed = false;
         if (!this.onPressCallback) {
-            console.log('[DEBUG]: On press callback not set');
-            console.log(this);
             return;
         }
 
@@ -138,8 +136,6 @@ class UiToggleButton extends UiButton {
 
         this.isPressed = false;
         if (!this.onPressCallback) {
-            console.log('[DEBUG]: On press callback not set');
-            console.log(this);
             return;
         }
 
@@ -186,7 +182,6 @@ export class MainMenu extends Phaser.Scene {
 
         let objectsCollection = GetObjectsCollection(this.map);
         positionsLayer.objects.forEach((obj) => {
-            console.log(obj);
             if (obj.gid != undefined) {
                 this.map.createFromObjects('Positions', obj.gid, { key: objectsCollection[obj.gid] });
             }

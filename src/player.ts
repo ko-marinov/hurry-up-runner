@@ -211,7 +211,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     updateState(state: PlayerState) {
         if (this.state === state) { return; }
-        console.log("Enter state:", state);
         this.state = state;
     }
 
@@ -242,7 +241,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     animComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         if (animation.key === 'jump') {
             if (frame.index == animation.frames.length) {
-                console.log("JumpTime: ", this.scene.time.now - this.jumpTime);
                 this.run(3);
             }
         }
@@ -250,7 +248,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.run(3);
         }
         if (animation.key === 'dash') {
-            console.log("DashTime: ", this.scene.time.now - this.jumpTime);
             this.run(6);
         }
     }

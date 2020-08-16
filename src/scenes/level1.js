@@ -50,13 +50,11 @@ class LevelBase extends Phaser.Scene {
     constructor(levelName) {
         super(levelName);
         this.levelName = levelName
-        console.log('CONSTRUCTOR:', this.levelName);
     }
 
     preload() { }
 
     create() {
-        console.log('CREATE:', this.levelName);
         this.map = this.make.tilemap({ key: this.levelName });
 
         let tilesets = [];
@@ -79,9 +77,7 @@ class LevelBase extends Phaser.Scene {
         this.playerStartPos = GetObjectByName(this.positionsLayer, 'PlayerStartPos');
 
         let objectsCollection = GetObjectsCollection(this.map);
-        console.log("Objects Collection:", objectsCollection);
         this.cityObjectsLayer.objects.forEach((obj) => {
-            console.log(obj);
             if (obj.gid != undefined) {
                 this.map.createFromObjects('CityObjects', obj.gid, { key: objectsCollection[obj.gid] });
             }
@@ -113,7 +109,6 @@ class LevelBase extends Phaser.Scene {
             this.levelData.get('2stars'),
             this.levelData.get('3stars')
         ]
-        console.log("STARS CONDS", this.starsTimeConditions);
         this.textTime = this.add.text(590, 1010, '', { fontFamily: 'vt323', fontSize: 22 });
         this.staminaBar = new StaminaBar(this, 20, 1010, this.player);
 
@@ -178,7 +173,6 @@ class LevelBase extends Phaser.Scene {
     }
 
     onRunIntoWalker(player, walker) {
-        console.log("Run into walker");
         player.onRunIntoWalker();
         walker.onBumped();
     }
@@ -244,7 +238,6 @@ class LevelBase extends Phaser.Scene {
 
         let bananaPeelsPositions = GetObjectsByType(this.positionsLayer, 'BananaPeel');
         bananaPeelsPositions.forEach(pos => {
-            console.log(pos);
             let bananaPeel = new BananaPeel(this, { x: pos.x, y: pos.y });
 
             this.physics.add.collider(bananaPeel, layer);
@@ -259,7 +252,6 @@ class LevelBase extends Phaser.Scene {
             return;
         }
 
-        console.log("Player stepped on banana at (%d, %d)", banana.x, banana.y);
         player.onStepOnBanana();
         banana.flyAway();
     }
@@ -303,7 +295,6 @@ class LevelBase extends Phaser.Scene {
 
         let walkerPaths = GetObjectsByType(this.positionsLayer, 'WalkerPath');
         walkerPaths.forEach(path => {
-            console.log(path);
             let inverse = path.properties[0].value;
             let x = path.x;
             let y = path.y;
@@ -327,7 +318,6 @@ class LevelBase extends Phaser.Scene {
 
         let triggers = GetObjectsByType(this.positionsLayer, 'BirdTrigger');
         triggers.forEach(trig => {
-            console.log(trig);
             let bird = new Bird(this, { x: trig.x + 250, y: trig.y - 25 });
 
             this.physics.add.overlap(this.player, bird, this.onRunIntoBird, null, this);
@@ -341,8 +331,6 @@ class LevelBase extends Phaser.Scene {
 
         let positionList = GetObjectsByType(this.positionsLayer, 'Shopkeeper');
         positionList.forEach(pos => {
-            console.log(pos);
-            console.log('Shopkeeper type:', GetObjectProperty(pos, 'type'));
             let shopkeeper = new Shopkeeper(this, {
                 x: pos.x,
                 y: pos.y,
@@ -355,7 +343,6 @@ class LevelBase extends Phaser.Scene {
     }
 
     onRunIntoBird(player, bird) {
-        console.log("Run into bird");
         player.onRunIntoBird();
         bird.onBumped();
     }
